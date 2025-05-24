@@ -1,5 +1,10 @@
-import Image from "next/image";
 import { motion } from "framer-motion";
+import StatueModel from "./StatueModel";
+import { useEffect, useRef } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const paragraphs = [
   "i'm just a guy that loves creating things.",
@@ -12,40 +17,87 @@ const paragraphs = [
 ];
 
 const AboutMe = () => {
+  const statueContainerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (statueContainerRef.current) {
+      const scrollTrigger = gsap.to(statueContainerRef.current, {
+        y: () => {
+          const scrollProgress =
+            ScrollTrigger.getById("about-section")?.progress || 0;
+          return scrollProgress * window.innerHeight;
+        },
+        ease: "power2.inOut",
+        scrollTrigger: {
+          id: "about-section",
+          trigger: "#about-me",
+          start: "top top",
+          end: "bottom bottom",
+          scrub: 0.5,
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
+          markers: false,
+        },
+      });
+
+      return () => {
+        scrollTrigger.kill();
+        ScrollTrigger.getById("about-section")?.kill();
+      };
+    }
+  }, []);
+
   return (
-    <section
-      id="about-me"
-      className="min-h-screen flex items-center justify-center px-6 md:px-16"
-    >
-      <div className="max-w-7xl w-full flex flex-col md:flex-row items-center justify-between gap-12 md:gap-24">
-        {/* Left: Only the descriptive text */}
-        <div className="flex-1 flex flex-col items-start justify-center">
-          {paragraphs.map((text, idx) => (
-            <motion.p
-              key={idx}
-              className="text-black font-bold text-xl md:text-2xl leading-relaxed max-w-2xl mb-6"
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.7 }}
-              transition={{
-                duration: 0.9,
-                delay: 0.3 + idx * 0.18,
-                ease: "easeOut",
-              }}
-              dangerouslySetInnerHTML={{ __html: text }}
-            />
-          ))}
-        </div>
-        {/* Right: Statue Image Placeholder */}
-        <div className="flex-1 flex items-center justify-center">
-          <div className="relative w-80 h-96 md:w-[28rem] md:h-[32rem]">
-            <Image
-              src="/statue-placeholder.png"
-              alt="Statue"
-              fill
-              className="object-contain opacity-80"
-              priority
-            />
+    <section id="about-me" className="min-h-screen py-12">
+      <div className="container mx-auto px-4">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Left: Text content */}
+          <div className="max-w-2xl">
+            {paragraphs.map((text, idx) => (
+              <motion.p
+                key={idx}
+                className="text-black font-bold text-xl md:text-2xl leading-relaxed mb-6"
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.7 }}
+                transition={{
+                  duration: 0.9,
+                  ease: "easeOut",
+                }}
+                dangerouslySetInnerHTML={{ __html: text }}
+              />
+            ))}
+          </div>
+
+          {/* Right: 3D Model */}
+          <div
+            className="h-screen sticky top-0 overflow-hidden"
+            ref={statueContainerRef}
+          >
+            <StatueModel />
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="absolute bottom-8 left-0 right-0 text-center px-4"
+            >
+              <motion.h2
+                className="text-3xl md:text-4xl font-bold text-gray-800 mb-2"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.4 }}
+              >
+                Zeno of Citium
+              </motion.h2>
+              <motion.p
+                className="text-lg md:text-xl text-gray-600 italic"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.6 }}
+              >
+                stoics are cool ig
+              </motion.p>
+            </motion.div>
           </div>
         </div>
       </div>

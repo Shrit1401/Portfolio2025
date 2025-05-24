@@ -9,7 +9,6 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@types/three": "^0.176.0",
     "framer-motion": "^12.12.2",
     "gsap": "^3.13.0",
     "next": "15.1.8",
@@ -21,6 +20,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/three": "^0.176.0",
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"

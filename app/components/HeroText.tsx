@@ -5,10 +5,33 @@ const burgundy = "#7B3737";
 const olive = "#3B4F1B";
 const ochre = "#B89B2B";
 
+const TimeDisplay = () => {
+  const [mounted, setMounted] = useState(false);
+  const [time, setTime] = useState(new Date());
+
+  useEffect(() => {
+    setMounted(true);
+    const timer = setInterval(() => {
+      setTime(new Date());
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  if (!mounted) {
+    return <div className="text-sm text-gray-600">--:--:--</div>;
+  }
+
+  return (
+    <div className="text-sm text-gray-600">{time.toLocaleTimeString()}</div>
+  );
+};
+
 const HeroText = () => {
   const [animate, setAnimate] = useState(false);
   const shapesRef = useRef<(SVGSVGElement | null)[]>([]);
   const textRef = useRef<(HTMLSpanElement | null)[]>([]);
+  const globeRef = useRef<SVGSVGElement>(null);
   const dev = process.env.NODE_ENV === "development";
 
   useEffect(() => {
@@ -49,6 +72,17 @@ const HeroText = () => {
           );
         }
       });
+
+      // Animate globe with continuous rotation
+      if (globeRef.current) {
+        gsap.to(globeRef.current, {
+          rotation: 360,
+          duration: 8,
+          repeat: -1,
+          ease: "none",
+          transformOrigin: "center center",
+        });
+      }
     }, 500);
 
     return () => clearTimeout(timer);
@@ -66,6 +100,11 @@ const HeroText = () => {
           
           .blackletter {
             font-family: 'UnifrakturCook', 'IM Fell English SC', serif;
+          }
+
+          @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
           }
         `}
       </style>
@@ -151,8 +190,37 @@ const HeroText = () => {
             </span>
           </span>
         </div>
+        <div className="absolute bottom-8 left-8 flex items-center gap-3">
+          <div className="flex items-center gap-2">
+            <svg
+              ref={globeRef}
+              className="w-5 h-5 text-gray-600"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+            <span className="text-sm text-black/80">Shrit Shrivastava</span>
+            <span className="text-sm text-gray-500">•</span>
+            <span className="text-sm text-black/80">India</span>
+          </div>
+          <TimeDisplay />
+        </div>
         <a
-          href="#work"
+          href="https://www.youtube.com/watch?v=dQw4w9WgXcQ&ab_channel=RickAstley"
+          target="_blank"
+          className="absolute bottom-8 right-8 text-sm italic underline text-black/80 hover:text-black  cursor-pointer underline-offset-4 hover:font-bold transition-all duration-300"
+        >
+          Don't Click Me
+        </a>
+        <a
+          href="/work"
           className="absolute bottom-8 left-1/2 -translate-x-1/2"
           aria-label="Scroll down"
         >
