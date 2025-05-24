@@ -4,17 +4,14 @@ import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 
 export default function Loader() {
-  // Skip loader in development
-  if (process.env.NODE_ENV === "development") {
-    return null;
-  }
-
   const loaderRef = useRef<HTMLDivElement>(null);
   const loaderImgsRef = useRef<HTMLDivElement>(null);
   const imgRefs = useRef<(HTMLDivElement | null)[]>([]);
   const textRef = useRef<HTMLDivElement>(null);
+  const magicalTextRef = useRef<HTMLDivElement>(null);
   const progressRef = useRef<HTMLDivElement>(null);
   const [isReady, setIsReady] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
   const [loadingText, setLoadingText] = useState("Brewing pixels...");
 
   const funnyTexts = [
@@ -25,37 +22,69 @@ export default function Loader() {
     "Final touches of brilliance ✨",
   ];
 
+  const magicalText = "made to amaze";
+  const magicalLetters = magicalText.split("");
+
   useEffect(() => {
     // Set initial states immediately
-    gsap.set(imgRefs.current, { y: 500 });
-    gsap.set(loaderImgsRef.current, { x: 500 });
+    gsap.set(loaderRef.current, { opacity: 100 });
+    gsap.set(imgRefs.current, { y: 500, opacity: 0 });
+    gsap.set(loaderImgsRef.current, { x: 500, opacity: 0 });
     gsap.set(textRef.current, { opacity: 0, y: 30 });
     gsap.set(progressRef.current, { scaleX: 0 });
+    gsap.set(".magical-letter", {
+      opacity: 0,
+      y: 40,
+      scale: 0.8,
+      rotateX: -90,
+    });
 
     // Show the loader now that initial states are set
     setIsReady(true);
 
-    // Text animation
-    gsap.to(textRef.current, {
-      opacity: 1,
-      y: 0,
-      duration: 1,
-      ease: "power2.out",
-      delay: 0.5,
-    });
+    // Create initial entrance animation timeline
+    const entranceTl = gsap.timeline();
 
-    // Progress bar animation
-    gsap.to(progressRef.current, {
-      scaleX: 1,
-      duration: 5,
-      ease: "power2.inOut",
-      delay: 1,
-    });
+    // Animate corner accents
+    entranceTl.fromTo(
+      ".absolute.top-8.left-8, .absolute.top-8.right-8, .absolute.bottom-8.left-8, .absolute.bottom-8.right-8",
+      { scale: 0.8, opacity: 0 },
+      {
+        scale: 1,
+        opacity: 1,
+        duration: 0.8,
+        stagger: 0.1,
+        ease: "back.out(1.7)",
+      }
+    );
+
+    // Text animation with enhanced timing
+    entranceTl.to(
+      textRef.current,
+      {
+        opacity: 1,
+        y: 0,
+        duration: 1,
+        ease: "power2.out",
+      },
+      "-=0.4"
+    );
+
+    // Progress bar animation with enhanced timing
+    entranceTl.to(
+      progressRef.current,
+      {
+        scaleX: 1,
+        duration: 8,
+        ease: "power2.inOut",
+      },
+      "-=0.6"
+    );
 
     // Cycling through funny texts with equal timing
     let textIndex = 0;
-    const totalDuration = 5000; // 5 seconds total (matching progress bar)
-    const timePerText = totalDuration / funnyTexts.length; // ~1000ms per text
+    const totalDuration = 8000; // 8 seconds total
+    const timePerText = totalDuration / funnyTexts.length;
 
     const textInterval = setInterval(() => {
       textIndex = (textIndex + 1) % funnyTexts.length;
@@ -76,6 +105,7 @@ export default function Loader() {
     // Enhanced loader animation sequence
     tl.to(imgRefs.current, {
       y: 0,
+      opacity: 1,
       duration: 2,
       ease: "power3.inOut",
       stagger: 0.08,
@@ -84,6 +114,7 @@ export default function Loader() {
         loaderImgsRef.current,
         {
           x: 0,
+          opacity: 1,
           duration: 3.5,
           ease: "power3.inOut",
         },
@@ -100,6 +131,49 @@ export default function Loader() {
         "-=1.2"
       )
       .to(
+        textRef.current,
+        {
+          opacity: 0,
+          y: -20,
+          duration: 0.8,
+          ease: "power2.in",
+        },
+        "-=0.5"
+      )
+      .to(
+        [progressRef.current],
+        {
+          opacity: 0,
+          y: 20,
+          duration: 0.8,
+          ease: "power2.in",
+        },
+        "-=0.8"
+      )
+      .to(
+        ".magical-letter",
+        {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          rotateX: 0,
+          duration: 1.2,
+          stagger: 0.05,
+          ease: "back.out(1.7)",
+        },
+        "-=0.3"
+      )
+      .to(".magical-letter", {
+        opacity: 0,
+        scale: 1.1,
+        y: -20,
+        rotateX: 90,
+        duration: 1.2,
+        stagger: 0.03,
+        ease: "power2.in",
+        delay: 1,
+      })
+      .to(
         loaderRef.current,
         {
           clipPath: "polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)",
@@ -111,29 +185,20 @@ export default function Loader() {
         },
         "-=0.5"
       );
+    setIsVisible(false);
   }, []);
 
   return (
     <div
       ref={loaderRef}
-      className="fixed w-screen h-screen bg-[#121212] pointer-events-none z-50 overflow-hidden"
+      className="fixed w-screen h-screen bg-[#111] pointer-events-none z-[9999] overflow-hidden"
       style={{
         clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
-        visibility: isReady ? "visible" : "hidden",
+        visibility: isVisible || isReady ? "visible" : "hidden",
       }}
     >
       {/* Minimal geometric patterns */}
       <div className="absolute inset-0">
-        {/* Subtle dots pattern */}
-        <div
-          className="absolute inset-0 opacity-5"
-          style={{
-            backgroundImage:
-              "radial-gradient(circle at 1px 1px, rgba(255,255,255,0.3) 1px, transparent 0)",
-            backgroundSize: "40px 40px",
-          }}
-        />
-
         {/* Corner accents */}
         <div className="absolute top-8 left-8 w-16 h-16 border-l-2 border-t-2 border-white/10" />
         <div className="absolute top-8 right-8 w-16 h-16 border-r-2 border-t-2 border-white/10" />
@@ -157,24 +222,32 @@ export default function Loader() {
             className="absolute inset-0 bg-gradient-to-r from-white/40 to-white/20 origin-left"
           />
         </div>
-
-        {/* Small loading indicator */}
-        <div className="flex justify-center mt-4 space-x-1">
-          {[0, 1, 2].map((i) => (
-            <div
-              key={i}
-              className="w-1.5 h-1.5 bg-white/30 rounded-full"
-              style={{
-                animation: `pulse 1.5s ease-in-out ${
-                  i * 0.2
-                }s infinite alternate`,
-              }}
-            />
-          ))}
-        </div>
       </div>
 
-      {/* Main Content - keeping original animation intact */}
+      {/* Magical text */}
+      <div
+        ref={magicalTextRef}
+        className="absolute bottom-12 left-1/2 -translate-x-1/2 text-white/90 text-4xl font-[var(--font-eb-garamond)]"
+        style={{
+          textShadow: "0 0 30px rgba(255,255,255,0.4)",
+          letterSpacing: "0.15em",
+          perspective: "1000px",
+        }}
+      >
+        {magicalLetters.map((letter, index) => (
+          <span
+            key={index}
+            className="magical-letter inline-block"
+            style={{
+              transformStyle: "preserve-3d",
+            }}
+          >
+            {letter === " " ? "\u00A0" : letter}
+          </span>
+        ))}
+      </div>
+
+      {/* Main Content */}
       <div
         ref={loaderImgsRef}
         className="w-[150%] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex gap-[50px]"
@@ -188,7 +261,7 @@ export default function Loader() {
           style={{ clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)" }}
         >
           <img
-            src="https://images.unsplash.com/photo-1556139954-ec19cce61d61?q=80&w=3087&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+            src="./loader/1.png"
             alt="Image 2"
             className="object-cover w-full h-full scale-110 transition-transform duration-500 ease-in-out hover:scale-100"
           />
@@ -201,7 +274,7 @@ export default function Loader() {
           style={{ clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)" }}
         >
           <img
-            src="https://images.unsplash.com/photo-1556139954-ec19cce61d61?q=80&w=3087&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+            src="./loader/2.png"
             alt="Image 3"
             className="object-cover w-full h-full scale-110 transition-transform duration-500 ease-in-out hover:scale-100"
           />
@@ -214,7 +287,7 @@ export default function Loader() {
           style={{ clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)" }}
         >
           <img
-            src="https://images.unsplash.com/photo-1556139954-ec19cce61d61?q=80&w=3087&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+            src="./loader/3.png"
             alt="Image 4"
             className="object-cover w-full h-full scale-110 transition-transform duration-500 ease-in-out hover:scale-100"
           />
@@ -227,7 +300,7 @@ export default function Loader() {
           style={{ clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)" }}
         >
           <img
-            src="https://images.unsplash.com/photo-1651289082485-6c06ea213736?q=80&w=3087&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+            src="./loader/logo.png"
             alt="Logo"
             className="object-cover w-full h-full scale-110 transition-transform duration-500 ease-in-out hover:scale-100"
           />
@@ -240,7 +313,7 @@ export default function Loader() {
           style={{ clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)" }}
         >
           <img
-            src="https://images.unsplash.com/photo-1556139954-ec19cce61d61?q=80&w=3087&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+            src="./loader/4.png"
             alt="Image 5"
             className="object-cover w-full h-full scale-110 transition-transform duration-500 ease-in-out hover:scale-100"
           />
@@ -253,7 +326,7 @@ export default function Loader() {
           style={{ clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)" }}
         >
           <img
-            src="https://images.unsplash.com/photo-1556139954-ec19cce61d61?q=80&small&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+            src="./loader/5.png"
             alt="Image 6"
             className="object-cover w-full h-full scale-110 transition-transform duration-500 ease-in-out hover:scale-100"
           />
@@ -266,7 +339,7 @@ export default function Loader() {
           style={{ clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)" }}
         >
           <img
-            src="https://images.unsplash.com/photo-1556139954-ec19cce61d61?q=80&w=3087&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+            src="./loader/6.png"
             alt="Image 7"
             className="object-cover w-full h-full scale-110 transition-transform duration-500 ease-in-out hover:scale-100"
           />

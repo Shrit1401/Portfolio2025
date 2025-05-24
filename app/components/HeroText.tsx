@@ -1,9 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
 import gsap from "gsap";
+import Newsletter from "./Newsletter";
 
 const burgundy = "#7B3737";
 const olive = "#3B4F1B";
 const ochre = "#B89B2B";
+const purple = "#6B46C1";
+const teal = "#2C7A7B";
+const coral = "#E53E3E";
 
 const TimeDisplay = () => {
   const [mounted, setMounted] = useState(false);
@@ -29,17 +33,22 @@ const TimeDisplay = () => {
 
 const HeroText = () => {
   const [animate, setAnimate] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
   const shapesRef = useRef<(SVGSVGElement | null)[]>([]);
   const textRef = useRef<(HTMLSpanElement | null)[]>([]);
   const globeRef = useRef<SVGSVGElement>(null);
-  const dev = process.env.NODE_ENV === "development";
+  const bottomElementsRef = useRef<HTMLDivElement>(null);
+  const dontClickRef = useRef<HTMLAnchorElement>(null);
+  const scrollDownRef = useRef<HTMLAnchorElement>(null);
+  const newsletterRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Start animation after 5 seconds
+    // Start animation after loader finishes
     const timer = setTimeout(() => {
       setAnimate(true);
+      setIsVisible(true);
 
-      // Animate shapes
+      // Animate shapes with increased delay
       shapesRef.current.forEach((shape, index) => {
         if (shape) {
           gsap.fromTo(
@@ -50,13 +59,40 @@ const HeroText = () => {
               opacity: 1,
               duration: 0.8,
               ease: "power2.out",
-              delay: dev ? 0 : 5 + 0.5 + index * 0.2,
+              delay: 9 + 0.5 + index * 0.2,
             }
           );
+
+          // Add subtle continuous rotation with different delays
+          gsap.to(shape, {
+            rotation: 360,
+            duration: 20 + index * 5,
+            repeat: -1,
+            ease: "none",
+            transformOrigin: "center center",
+            delay: 9 + index * 2,
+          });
+
+          // Color transition animation
+          const colors = [
+            [burgundy, purple],
+            [olive, teal],
+            [ochre, coral],
+          ][index];
+
+          gsap.to(shape, {
+            fill: colors[1],
+            stroke: colors[1],
+            duration: 3,
+            repeat: -1,
+            yoyo: true,
+            ease: "power1.inOut",
+            delay: 9 + index * 1.5,
+          });
         }
       });
 
-      // Animate text
+      // Animate text with increased delay
       textRef.current.forEach((text, index) => {
         if (text) {
           gsap.fromTo(
@@ -67,13 +103,13 @@ const HeroText = () => {
               opacity: 1,
               duration: 1.1,
               ease: "power2.out",
-              delay: dev ? 0 : 5 + 0.5 + index * 0.18,
+              delay: 9 + 0.5 + index * 0.18,
             }
           );
         }
       });
 
-      // Animate globe with continuous rotation
+      // Animate globe with increased delay
       if (globeRef.current) {
         gsap.to(globeRef.current, {
           rotation: 360,
@@ -81,7 +117,68 @@ const HeroText = () => {
           repeat: -1,
           ease: "none",
           transformOrigin: "center center",
+          delay: 9,
         });
+      }
+
+      // Animate bottom elements
+      if (bottomElementsRef.current) {
+        gsap.fromTo(
+          bottomElementsRef.current,
+          { y: 20, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 1,
+            ease: "power2.out",
+            delay: 9.5,
+          }
+        );
+      }
+
+      // Animate "Don't Click Me" link
+      if (dontClickRef.current) {
+        gsap.fromTo(
+          dontClickRef.current,
+          { x: 20, opacity: 0 },
+          {
+            x: 0,
+            opacity: 1,
+            duration: 1,
+            ease: "power2.out",
+            delay: 9.7,
+          }
+        );
+      }
+
+      // Animate scroll down arrow
+      if (scrollDownRef.current) {
+        gsap.fromTo(
+          scrollDownRef.current,
+          { y: 20, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 1,
+            ease: "power2.out",
+            delay: 9.9,
+          }
+        );
+      }
+
+      // Animate newsletter
+      if (newsletterRef.current) {
+        gsap.fromTo(
+          newsletterRef.current,
+          { y: 20, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 1,
+            ease: "power2.out",
+            delay: 10,
+          }
+        );
       }
     }, 500);
 
@@ -109,7 +206,13 @@ const HeroText = () => {
         `}
       </style>
 
-      <section className="w-full flex flex-col items-center justify-center flex-1 px-4 relative">
+      <section
+        className="w-full flex flex-col items-center justify-center flex-1 px-4 relative"
+        style={{
+          opacity: isVisible ? 1 : 0,
+          transition: "opacity 0.5s ease-in-out",
+        }}
+      >
         <div className="hero-text text-center text-4xl md:text-5xl lg:text-6xl text-gray-800 leading-snug font-normal">
           <span className="inline-flex items-center">
             <svg
@@ -122,7 +225,14 @@ const HeroText = () => {
               viewBox="0 0 32 32"
               style={{ opacity: 0 }}
             >
-              <circle cx="16" cy="16" r="16" fill={burgundy} />
+              <path
+                d="M16 4L28 24H4L16 4Z"
+                fill={burgundy}
+                rx="2"
+                stroke={burgundy}
+                strokeWidth="2"
+                strokeLinejoin="round"
+              />
             </svg>
             <span
               ref={(el) => {
@@ -153,7 +263,7 @@ const HeroText = () => {
               viewBox="0 0 32 32"
               style={{ opacity: 0 }}
             >
-              <circle cx="16" cy="16" r="16" fill={olive} />
+              <rect x="4" y="4" width="24" height="24" rx="6" fill={olive} />
             </svg>
           </span>
           <br />
@@ -190,7 +300,14 @@ const HeroText = () => {
             </span>
           </span>
         </div>
-        <div className="absolute bottom-8 left-8 flex items-center gap-3">
+        <div ref={newsletterRef} style={{ opacity: 0 }}>
+          <Newsletter className="mt-8" />
+        </div>
+        <div
+          ref={bottomElementsRef}
+          className="absolute bottom-8 left-8 flex items-center gap-3"
+          style={{ opacity: 0 }}
+        >
           <div className="flex items-center gap-2">
             <svg
               ref={globeRef}
@@ -213,16 +330,20 @@ const HeroText = () => {
           <TimeDisplay />
         </div>
         <a
+          ref={dontClickRef}
           href="https://www.youtube.com/watch?v=dQw4w9WgXcQ&ab_channel=RickAstley"
           target="_blank"
-          className="absolute bottom-8 right-8 text-sm italic underline text-black/80 hover:text-black  cursor-pointer underline-offset-4 hover:font-bold transition-all duration-300"
+          className="absolute bottom-8 right-8 text-sm italic underline text-black/80 hover:text-black cursor-pointer underline-offset-4 hover:font-bold transition-all duration-300"
+          style={{ opacity: 0 }}
         >
           Don't Click Me
         </a>
         <a
+          ref={scrollDownRef}
           href="/work"
           className="absolute bottom-8 left-1/2 -translate-x-1/2"
           aria-label="Scroll down"
+          style={{ opacity: 0 }}
         >
           <svg
             className="w-8 h-8 text-gray-700 animate-bounce"

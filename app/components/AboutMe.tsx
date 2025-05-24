@@ -3,6 +3,7 @@ import StatueModel from "./StatueModel";
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import Newsletter from "./Newsletter";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -37,6 +38,8 @@ const AboutMe = () => {
           anticipatePin: 1,
           invalidateOnRefresh: true,
           markers: false,
+          pin: true,
+          pinSpacing: true,
         },
       });
 
@@ -67,6 +70,14 @@ const AboutMe = () => {
                 dangerouslySetInnerHTML={{ __html: text }}
               />
             ))}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+            >
+              <Newsletter className="mt-8" />
+            </motion.div>
           </div>
 
           {/* Right: 3D Model */}

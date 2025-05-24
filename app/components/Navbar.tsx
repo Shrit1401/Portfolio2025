@@ -30,6 +30,12 @@ export default function Navbar() {
           YT
         </a>
         <a
+          href="#yt"
+          className="hover:underline hover:font-bold transition-all duration-300"
+        >
+          newsletter
+        </a>
+        <a
           href="#work"
           className="hover:underline hover:font-bold transition-all duration-300"
         >
