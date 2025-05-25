@@ -3,7 +3,7 @@ import React from "react";
 const links = [
   {
     href: "/work",
-    img: "/wayout/work.png",
+    img: "/wayout/nerd.png",
     label: "\u2190 Work", // ← Work
     align: "left",
   },
@@ -22,7 +22,7 @@ const links = [
   },
   {
     href: "/nerd",
-    img: "/wayout/nerd.png",
+    img: "/wayout/work.png",
     label: "Nerd \u2192", // Nerd →
     align: "right",
   },

@@ -59,7 +59,7 @@ const HeroText = () => {
               opacity: 1,
               duration: 0.8,
               ease: "power2.out",
-              delay: 9 + 0.5 + index * 0.2,
+              delay: 5 + 0.5 + index * 0.2,
             }
           );
 
@@ -70,7 +70,7 @@ const HeroText = () => {
             repeat: -1,
             ease: "none",
             transformOrigin: "center center",
-            delay: 9 + index * 2,
+            delay: 5 + index * 2,
           });
 
           // Color transition animation
@@ -87,7 +87,7 @@ const HeroText = () => {
             repeat: -1,
             yoyo: true,
             ease: "power1.inOut",
-            delay: 9 + index * 1.5,
+            delay: 5 + index * 1.5,
           });
         }
       });
@@ -103,7 +103,7 @@ const HeroText = () => {
               opacity: 1,
               duration: 1.1,
               ease: "power2.out",
-              delay: 9 + 0.5 + index * 0.18,
+              delay: 5 + 0.5 + index * 0.18,
             }
           );
         }
@@ -117,7 +117,7 @@ const HeroText = () => {
           repeat: -1,
           ease: "none",
           transformOrigin: "center center",
-          delay: 9,
+          delay: 5,
         });
       }
 
@@ -131,7 +131,7 @@ const HeroText = () => {
             opacity: 1,
             duration: 1,
             ease: "power2.out",
-            delay: 9.5,
+            delay: 5.5,
           }
         );
       }
@@ -146,7 +146,7 @@ const HeroText = () => {
             opacity: 1,
             duration: 1,
             ease: "power2.out",
-            delay: 9.7,
+            delay: 5.7,
           }
         );
       }
@@ -161,7 +161,7 @@ const HeroText = () => {
             opacity: 1,
             duration: 1,
             ease: "power2.out",
-            delay: 9.9,
+            delay: 5.9,
           }
         );
       }
@@ -176,7 +176,7 @@ const HeroText = () => {
             opacity: 1,
             duration: 1,
             ease: "power2.out",
-            delay: 10,
+            delay: 6,
           }
         );
       }
@@ -329,15 +329,13 @@ const HeroText = () => {
           </div>
           <TimeDisplay />
         </div>
-        <a
+        <span
           ref={dontClickRef}
-          href="https://www.youtube.com/watch?v=dQw4w9WgXcQ&ab_channel=RickAstley"
-          target="_blank"
-          className="absolute bottom-8 right-8 text-sm italic underline text-black/80 hover:text-black cursor-pointer underline-offset-4 hover:font-bold transition-all duration-300"
+          className="absolute bottom-8 right-8 text-sm text-black/80   underline-offset-4transition-all duration-300"
           style={{ opacity: 0 }}
         >
-          Don't Click Me
-        </a>
+          Made To Amaze
+        </span>
         <a
           ref={scrollDownRef}
           href="/work"

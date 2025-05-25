@@ -8,7 +8,6 @@ export default function Loader() {
   const loaderImgsRef = useRef<HTMLDivElement>(null);
   const imgRefs = useRef<(HTMLDivElement | null)[]>([]);
   const textRef = useRef<HTMLDivElement>(null);
-  const magicalTextRef = useRef<HTMLDivElement>(null);
   const progressRef = useRef<HTMLDivElement>(null);
   const [isReady, setIsReady] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
@@ -22,9 +21,6 @@ export default function Loader() {
     "Final touches of brilliance ✨",
   ];
 
-  const magicalText = "made to amaze";
-  const magicalLetters = magicalText.split("");
-
   useEffect(() => {
     // Set initial states immediately
     gsap.set(loaderRef.current, { opacity: 100 });
@@ -32,12 +28,6 @@ export default function Loader() {
     gsap.set(loaderImgsRef.current, { x: 500, opacity: 0 });
     gsap.set(textRef.current, { opacity: 0, y: 30 });
     gsap.set(progressRef.current, { scaleX: 0 });
-    gsap.set(".magical-letter", {
-      opacity: 0,
-      y: 40,
-      scale: 0.8,
-      rotateX: -90,
-    });
 
     // Show the loader now that initial states are set
     setIsReady(true);
@@ -75,7 +65,7 @@ export default function Loader() {
       progressRef.current,
       {
         scaleX: 1,
-        duration: 8,
+        duration: 5,
         ease: "power2.inOut",
       },
       "-=0.6"
@@ -83,7 +73,7 @@ export default function Loader() {
 
     // Cycling through funny texts with equal timing
     let textIndex = 0;
-    const totalDuration = 8000; // 8 seconds total
+    const totalDuration = 5000; // 5 seconds total
     const timePerText = totalDuration / funnyTexts.length;
 
     const textInterval = setInterval(() => {
@@ -151,29 +141,6 @@ export default function Loader() {
         "-=0.8"
       )
       .to(
-        ".magical-letter",
-        {
-          opacity: 1,
-          y: 0,
-          scale: 1,
-          rotateX: 0,
-          duration: 1.2,
-          stagger: 0.05,
-          ease: "back.out(1.7)",
-        },
-        "-=0.3"
-      )
-      .to(".magical-letter", {
-        opacity: 0,
-        scale: 1.1,
-        y: -20,
-        rotateX: 90,
-        duration: 1.2,
-        stagger: 0.03,
-        ease: "power2.in",
-        delay: 1,
-      })
-      .to(
         loaderRef.current,
         {
           clipPath: "polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)",
@@ -222,29 +189,6 @@ export default function Loader() {
             className="absolute inset-0 bg-gradient-to-r from-white/40 to-white/20 origin-left"
           />
         </div>
-      </div>
-
-      {/* Magical text */}
-      <div
-        ref={magicalTextRef}
-        className="absolute bottom-12 left-1/2 -translate-x-1/2 text-white/90 text-4xl font-[var(--font-eb-garamond)]"
-        style={{
-          textShadow: "0 0 30px rgba(255,255,255,0.4)",
-          letterSpacing: "0.15em",
-          perspective: "1000px",
-        }}
-      >
-        {magicalLetters.map((letter, index) => (
-          <span
-            key={index}
-            className="magical-letter inline-block"
-            style={{
-              transformStyle: "preserve-3d",
-            }}
-          >
-            {letter === " " ? "\u00A0" : letter}
-          </span>
-        ))}
       </div>
 
       {/* Main Content */}
