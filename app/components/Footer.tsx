@@ -75,6 +75,17 @@ const Footer = () => {
             </Link>
           </div>
 
+          <p className="text-center text-gray-300">
+            Oh, if you wanna connect, send me a mail at{" "}
+            <a
+              href="mailto:Shrit1401@gmail.com"
+              className="text-white underline hover:text-gray-300 transition-colors duration-300"
+            >
+              Shrit1401@gmail.com
+            </a>{" "}
+            or DM me on socials!
+          </p>
+
           <nav className="flex gap-8 items-center">
             <span
               onClick={handleNavigation("/nerd")}

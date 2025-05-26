@@ -79,7 +79,7 @@ const WorkTell = () => {
             if (title1) {
               gsap.to(title1, {
                 xPercent: -50,
-                x: `${baseoffset * 4}px`,
+                x: `${baseoffset * 8}px`,
                 duration: 0.2,
                 ease: "power1.out",
                 overwrite: "auto",
@@ -89,7 +89,7 @@ const WorkTell = () => {
             if (title2) {
               gsap.to(title2, {
                 xPercent: -50,
-                x: `${baseoffset * 2}px`,
+                x: `${baseoffset * 4}px`,
                 duration: 0.2,
                 ease: "power1.out",
                 overwrite: "auto",

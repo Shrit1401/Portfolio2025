@@ -32,7 +32,7 @@ body {
   background: var(--teal);
   animation: colorChange 10s infinite;
   pointer-events: none;
-  z-index: 99999999999;
+  z-index: 99;
 }
 
 @keyframes colorChange {
@@ -115,24 +115,26 @@ body {
 
 .titles h1 {
   text-transform: uppercase;
-  font-size: 4vw;
-  font-weight: 800;
+  font-size: 12vw;
+  font-weight: 900;
   color: black;
-
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 9vw;
   font-style: italic;
   will-change: transform;
+  letter-spacing: -0.02em;
+  line-height: 0.9;
 }
 
 h1.title-1 {
   color: #fa6c6c;
+  text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.1);
 }
 h1.title-2 {
   color: #10d0f4;
+  text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.1);
 }
 
 .titles {

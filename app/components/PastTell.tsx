@@ -177,14 +177,8 @@ const PastTell = () => {
 
   return (
     <section className="pasttell-section relative flex py-10 items-center justify-center min-h-screen ">
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;1,400&family=UnifrakturCook:wght@700&display=swap');
-        .pasttell-title { font-family: 'Playfair Display', Georgia, serif; }
-        .pasttell-date { font-family: 'UnifrakturCook', 'IM Fell English SC', serif; }
-        .pasttell-bgword { font-family: 'UnifrakturCook', 'IM Fell English SC', serif; }
-      `}</style>
       {/* Large low-opacity background word */}
-      <span className="pasttell-bgword pointer-events-none select-none absolute text-[16vw] left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-black/5 font-black tracking-tight z-10">
+      <span className="pasttell-bgword pointer-events-none select-none absolute  text-[20vw] sm:text-[16vw] left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-black/5 font-black tracking-tight z-10">
         Timeline
       </span>
       <div className="w-full max-w-2xl px-4 z-20">

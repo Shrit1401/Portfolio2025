@@ -33,6 +33,9 @@ const AboutMe = () => {
   useEffect(() => {
     let ctx = gsap.context(() => {
       if (statueContainerRef.current && sectionRef.current) {
+        // Check if we're on mobile
+        const isMobile = window.innerWidth < 768;
+
         // Create the scroll trigger with shorter, smoother animation
         gsap.timeline({
           scrollTrigger: {
@@ -45,7 +48,20 @@ const AboutMe = () => {
             invalidateOnRefresh: true,
             refreshPriority: -1,
             onUpdate: (self) => {
-              // Smoother clamping with easing
+              // If mobile, keep the statue fixed
+              if (isMobile) {
+                gsap.to(statueContainerRef.current, {
+                  y: 0,
+                  scale: 1,
+                  rotation: 0,
+                  transformOrigin: "center center",
+                  duration: 0.3,
+                  ease: "power2.out",
+                });
+                return;
+              }
+
+              // Desktop animation
               const rawProgress = self.progress;
               const easedProgress = gsap.utils.clamp(0, 1, rawProgress);
               const smoothProgress = gsap.utils.interpolate(
@@ -95,15 +111,19 @@ const AboutMe = () => {
   }, []);
 
   return (
-    <section id="about-me" className="relative min-h-[150vh]" ref={sectionRef}>
-      <div className="container mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 min-h-screen">
+    <section
+      id="about-me"
+      className="relative min-h-[100vh] md:min-h-[150vh]"
+      ref={sectionRef}
+    >
+      <div className="container mx-auto px-4 py-6 md:py-12">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-8 min-h-[90vh] md:min-h-screen">
           {/* Left: Text content */}
           <div className="max-w-2xl flex flex-col justify-center">
             {paragraphs.map((text, idx) => (
               <motion.p
                 key={idx}
-                className="text-black font-bold text-xl md:text-2xl leading-relaxed mb-6"
+                className="text-black font-bold text-lg md:text-2xl leading-relaxed mb-4 md:mb-6"
                 initial={{ opacity: 0, y: 40 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.7 }}
@@ -127,16 +147,16 @@ const AboutMe = () => {
 
           {/* Right: 3D Model */}
           <div
-            className="h-screen flex items-center justify-center relative"
+            className="h-[30vh] md:h-screen flex items-center justify-center relative"
             ref={statueContainerRef}
           >
-            <div className="relative w-full h-full">
+            <div className="relative w-full h-[50vh] md:h-full">
               <StatueModel />
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.2 }}
-                className="absolute bottom-8 left-0 right-0 text-center px-4  py-4 rounded-t-lg"
+                className="absolute bottom-4 md:bottom-8 left-0 right-0 text-center px-4 py-2 md:py-4 rounded-t-lg"
               >
                 <motion.h2
                   className="text-3xl md:text-4xl font-bold text-gray-800 mb-2"

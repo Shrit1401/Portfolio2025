@@ -1,5 +1,6 @@
 "use client";
 
+import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
 import PastTell from "../components/PastTell";
 import PastText from "../components/Pasttext";
@@ -15,6 +16,7 @@ export default function Past() {
         <PastText />
       </div>
       <PastTell />
+      <Footer />
     </div>
   );
 }

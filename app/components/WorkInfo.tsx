@@ -188,13 +188,7 @@ const WorkInfo = () => {
   }, [hoveredIdx]);
 
   return (
-    <section className="workinfo-section flex py-10 items-center justify-center">
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;1,400&family=UnifrakturCook:wght@700&display=swap');
-        .workinfo-title { font-family: 'Playfair Display', Georgia, serif; }
-        .workinfo-year { font-family: 'UnifrakturCook', 'IM Fell English SC', serif; }
-        .workinfo-bgword { font-family: 'UnifrakturCook', 'IM Fell English SC', serif; }
-      `}</style>
+    <div className="workinfo-section flex py-10 items-center justify-center">
       {/* Background images */}
       <div className="absolute inset-0 w-full h-full pointer-events-none select-none z-0">
         {projects.map((project, idx) => (
@@ -222,8 +216,8 @@ const WorkInfo = () => {
         ))}
       </div>
       {/* Large low-opacity background word */}
-      <span className="workinfo-bgword pointer-events-none select-none absolute text-[16vw] left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-black/5 font-black tracking-tight z-10">
-        Showcase
+      <span className="workinfo-bgword pointer-events-none select-none absolute text-[20vw] left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-black/5 font-black tracking-tight z-10">
+        Flex
       </span>
       <div className="w-full max-w-3xl px-4 z-20">
         <h2 className="workinfo-title text-3xl md:text-5xl font-bold text-neutral-900 mb-10 tracking-tight text-left">
@@ -290,7 +284,7 @@ const WorkInfo = () => {
         {/* Made by badge */}
         <div className="flex justify-end mt-12">
           <a
-            href="https://github.com/shrit1401"
+            href="https://github.com/Shrit1401?tab=repositories"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-block px-6 py-2 rounded-full bg-black/5 text-neutral-700 font-semibold text-base tracking-wide border border-black/10 shadow-sm backdrop-blur-md"
@@ -299,7 +293,7 @@ const WorkInfo = () => {
           </a>
         </div>
       </div>
-    </section>
+    </div>
   );
 };
 

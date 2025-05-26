@@ -24,8 +24,15 @@ export default function Loader() {
   useEffect(() => {
     // Set initial states immediately
     gsap.set(loaderRef.current, { opacity: 100 });
-    gsap.set(imgRefs.current, { y: 500, opacity: 0 });
-    gsap.set(loaderImgsRef.current, { x: 500, opacity: 0 });
+    gsap.set(imgRefs.current, {
+      y: window.innerWidth <= 768 ? -500 : 500,
+      opacity: 0,
+    });
+    gsap.set(loaderImgsRef.current, {
+      x: window.innerWidth <= 768 ? 0 : 500,
+      y: window.innerWidth <= 768 ? -500 : 0,
+      opacity: 0,
+    });
     gsap.set(textRef.current, { opacity: 0, y: 30 });
     gsap.set(progressRef.current, { scaleX: 0 });
 
@@ -92,6 +99,9 @@ export default function Loader() {
 
     const tl = gsap.timeline({ delay: 1 });
 
+    // Check if mobile screen
+    const isMobile = window.innerWidth <= 768;
+
     // Enhanced loader animation sequence
     tl.to(imgRefs.current, {
       y: 0,
@@ -104,6 +114,7 @@ export default function Loader() {
         loaderImgsRef.current,
         {
           x: 0,
+          y: 0,
           opacity: 1,
           duration: 3.5,
           ease: "power3.inOut",
@@ -158,7 +169,7 @@ export default function Loader() {
   return (
     <div
       ref={loaderRef}
-      className="fixed w-screen h-screen bg-[#111] pointer-events-none z-[9999] overflow-hidden"
+      className="fixed w-screen h-screen bg-[#111] pointer-events-none z-[999] overflow-hidden"
       style={{
         clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
         visibility: isVisible || isReady ? "visible" : "hidden",
@@ -194,7 +205,7 @@ export default function Loader() {
       {/* Main Content */}
       <div
         ref={loaderImgsRef}
-        className="w-[150%] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex gap-[50px]"
+        className="w-[150%] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex gap-[50px] md:flex-row flex-col md:w-[150%] w-full"
         style={{ clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)" }}
       >
         <div

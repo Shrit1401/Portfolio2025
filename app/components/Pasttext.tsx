@@ -281,41 +281,68 @@ const PastText = () => {
         </div>
         <div
           ref={bottomElementsRef}
-          className="absolute bottom-8 left-8 flex items-center gap-3"
+          className="absolute bottom-4 md:bottom-8 left-4 md:left-8 flex flex-col md:flex-row items-start md:items-center gap-2 md:gap-3 w-[calc(100%-2rem)] md:w-auto"
           style={{ opacity: 0 }}
         >
-          <div className="flex items-center gap-2">
+          <div className="flex flex-col md:flex-row items-start md:items-center gap-1 md:gap-2 w-full md:w-auto">
+            <div className="flex items-center gap-2">
+              <svg
+                ref={globeRef}
+                className="w-4 h-4 md:w-5 md:h-5 text-gray-600"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              <span className="text-xs md:text-sm text-black/80">
+                Shrit Shrivastava
+              </span>
+              <span className="text-xs md:text-sm text-gray-500">•</span>
+              <span className="text-xs md:text-sm text-black/80">India</span>
+            </div>
+            <TimeDisplay />
+          </div>
+        </div>
+        <div className="absolute bottom-4 md:bottom-8 right-4 md:right-8 flex flex-col items-end gap-2 md:gap-3">
+          <span
+            ref={dontClickRef}
+            className="text-xs md:text-sm text-black/80 underline-offset-4 transition-all duration-300"
+            style={{ opacity: 0 }}
+          >
+            Made To Amaze
+          </span>
+          <a
+            ref={scrollDownRef}
+            href="/work"
+            className="md:hidden"
+            aria-label="Scroll down"
+            style={{ opacity: 0 }}
+          >
             <svg
-              ref={globeRef}
-              className="w-5 h-5 text-gray-600"
+              className="w-6 h-6 text-gray-700 animate-bounce"
               fill="none"
               stroke="currentColor"
+              strokeWidth="2"
               viewBox="0 0 24 24"
             >
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                strokeWidth="2"
-                d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                d="M19 9l-7 7-7-7"
               />
             </svg>
-            <span className="text-sm text-black/80">Shrit Shrivastava</span>
-            <span className="text-sm text-gray-500">•</span>
-            <span className="text-sm text-black/80">India</span>
-          </div>
-          <TimeDisplay />
+          </a>
         </div>
-        <span
-          ref={dontClickRef}
-          className="absolute bottom-8 right-8 text-sm text-black/80   underline-offset-4transition-all duration-300"
-          style={{ opacity: 0 }}
-        >
-          Made To Amaze
-        </span>
         <a
           ref={scrollDownRef}
           href="/work"
-          className="absolute bottom-8 left-1/2 -translate-x-1/2"
+          className="absolute bottom-4 md:bottom-8 left-1/2 -translate-x-1/2 hidden md:block"
           aria-label="Scroll down"
           style={{ opacity: 0 }}
         >
