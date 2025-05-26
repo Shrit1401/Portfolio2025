@@ -1,7 +1,46 @@
+"use client";
 import React, { useEffect } from "react";
 import gsap from "gsap";
+import { useTransitionRouter } from "next-view-transitions";
+import { usePathname } from "next/navigation";
 
-export default function Navbar() {
+type NavbarProps = {
+  active?: "work" | "past" | "nerd";
+};
+
+export default function Navbar({ active }: NavbarProps) {
+  const router = useTransitionRouter();
+  const pathname = usePathname();
+
+  function triggerPageTransition() {
+    document.documentElement.animate(
+      [
+        {
+          clipPath: "polygon(25% 75%, 75% 75%, 75% 75%, 25% 75%)",
+        },
+        {
+          clipPath: "polygon(0 100%, 100% 100%, 100% 0,0 0)",
+        },
+      ],
+      {
+        duration: 2000,
+        easing: "cubic-bezier(0.9, 0, 0.1, 1)",
+        pseudoElement: "::view-transition-new(root)",
+      }
+    );
+  }
+
+  const handleNavigation =
+    (path: string) => (e: React.MouseEvent<HTMLAnchorElement>) => {
+      if (path === pathname) {
+        e.preventDefault();
+        return;
+      }
+      router.push(path, {
+        onTransitionReady: triggerPageTransition,
+      });
+    };
+
   useEffect(() => {
     const logo = document.querySelector(".logo");
     if (logo) {
@@ -18,40 +57,51 @@ export default function Navbar() {
     <nav className="w-full flex items-center justify-between py-8 px-12 bg-transparent">
       <a
         href="/"
+        onClick={handleNavigation("/")}
         className="logo text-3xl font-extrabold tracking-tight hover:font-normal transition-all duration-300"
       >
         Shrit.
       </a>
       <div className="flex space-x-10 text-xl font-normal">
         <a
-          href="#yt"
+          href="https://www.youtube.com/@shippingshrit"
+          target="_blank"
+          rel="noopener noreferrer"
           className="hover:underline hover:font-bold transition-all duration-300"
         >
           YT
         </a>
         <a
-          href="#yt"
+          href="https://shrit.substack.com/"
+          target="_blank"
+          rel="noopener noreferrer"
           className="hover:underline hover:font-bold transition-all duration-300"
         >
           newsletter
         </a>
-        <a
-          href="#work"
-          className="hover:underline hover:font-bold transition-all duration-300"
+        <span
+          onClick={handleNavigation("/work")}
+          className={`hover:underline cursor-pointer hover:font-bold transition-all duration-300 ${
+            active === "work" ? "font-bold underline" : ""
+          }`}
         >
           Work
-        </a>
-        <a
-          href="#past"
-          className="hover:underline hover:font-bold transition-all duration-300"
+        </span>
+        <span
+          onClick={handleNavigation("/past")}
+          className={`hover:underline cursor-pointer hover:font-bold transition-all duration-300 ${
+            active === "past" ? "font-bold underline" : ""
+          }`}
         >
           Past
-        </a>
+        </span>
         <a
-          href="#nerd"
-          className="hover:underline hover:font-bold transition-all duration-300"
+          onClick={handleNavigation("/nerd")}
+          className={`hover:underline cursor-pointer hover:font-bold transition-all duration-300 ${
+            active === "nerd" ? "font-bold underline" : ""
+          }`}
         >
-          Nerd
+          Nerd <span className="text-sm">(Research)</span>
         </a>
       </div>
     </nav>

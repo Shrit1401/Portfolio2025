@@ -5,6 +5,12 @@
 :root {
   --background: #f8f6f0;
   --foreground: #171717;
+  --burgundy: #7b3737;
+  --olive: #3b4f1b;
+  --ochre: #b89b2b;
+  --purple: #6b46c1;
+  --teal: #2c7a7b;
+  --coral: #e53e3e;
 }
 
 html {
@@ -14,5 +20,177 @@ html {
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
 }
+
+.revealer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  transform-origin: center top;
+  background: var(--teal);
+  animation: colorChange 10s infinite;
+  pointer-events: none;
+  z-index: 99999999999;
+}
+
+@keyframes colorChange {
+  0% {
+    background: var(--burgundy);
+  }
+  20% {
+    background: var(--olive);
+  }
+  40% {
+    background: var(--ochre);
+  }
+  60% {
+    background: var(--purple);
+  }
+  80% {
+    background: var(--teal);
+  }
+  100% {
+    background: var(--coral);
+  }
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none !important;
+}
+
+::view-transition-group(root) {
+  z-index: auto !important;
+}
+
+::view-transition-image-pair(root) {
+  isolation: isolate;
+  will-change: clip-path;
+  z-index: 1;
+}
+
+::view-transition-new(root) {
+  z-index: 2;
+  animation: none !important;
+}
+
+::view-transition-old(root) {
+  z-index: 1;
+  animation: none !important;
+}
+
+.explosion-container {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 200%;
+  pointer-events: none;
+}
+
+.explosion-container-img {
+  position: absolute;
+  bottom: -200px;
+  left: 50%;
+  width: 150px;
+  transform: translateX(-50%);
+  will-change: transform;
+  object-fit: cover;
+}
+
+.sticky img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.work section {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.titles h1 {
+  text-transform: uppercase;
+  font-size: 4vw;
+  font-weight: 800;
+  color: black;
+
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 9vw;
+  font-style: italic;
+  will-change: transform;
+}
+
+h1.title-1 {
+  color: #fa6c6c;
+}
+h1.title-2 {
+  color: #10d0f4;
+}
+
+.titles {
+  position: absolute;
+  top: 0%;
+  left: 0%;
+  width: 400vw;
+  height: 100vh;
+  display: flex;
+  will-change: transform;
+}
+
+.title {
+  position: relative;
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.images {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 250vw;
+  height: 250vw;
+  transform-style: preserve-3d;
+  perspective: 2000px;
+  z-index: -1;
+}
+
+.card {
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  border-radius: 2em;
+  transform-style: preserve-3d;
+  will-change: transform;
+  overflow: hidden;
+}
+
+/* Add a class for WorkInfo to allow vertical scrolling if content overflows */
+.workinfo-section {
+  min-height: 100vh;
+  height: auto;
+  overflow-y: auto;
+  width: 100vw;
+  position: relative;
+}
+
+/* Add a class for PastTell to allow vertical scrolling if content overflows */
+.pasttell-section {
+  min-height: 100vh;
+  height: auto;
+  overflow-y: auto;
+  width: 100vw;
+  position: relative;
+}
+
+/* Do NOT change the default section styles for sticky/WorkTell */

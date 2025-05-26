@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import { DM_Sans, EB_Garamond } from "next/font/google";
 import "./globals.css";
 
+import { ViewTransitions } from "next-view-transitions";
+import SmoothScroll from "./components/SmoothScroll";
+
 const dmSans = DM_Sans({
   subsets: ["latin"],
   variable: "--font-dm-sans",
@@ -23,12 +26,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${dmSans.variable} ${ebGaramond.variable} font-sans antialiased`}
-      >
-        {children}
-      </body>
-    </html>
+    <ViewTransitions>
+      <html lang="en">
+        <body
+          className={`${dmSans.variable} ${ebGaramond.variable} font-sans antialiased`}
+        >
+          <SmoothScroll>{children}</SmoothScroll>
+        </body>
+      </html>
+    </ViewTransitions>
   );
 }

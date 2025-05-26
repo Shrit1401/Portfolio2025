@@ -1,9 +1,18 @@
+"use client";
+
 import { motion } from "framer-motion";
 import StatueModel from "./StatueModel";
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Newsletter from "./Newsletter";
+import Lenis from "lenis";
+
+declare global {
+  interface Window {
+    lenis?: Lenis;
+  }
+}
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -19,43 +28,78 @@ const paragraphs = [
 
 const AboutMe = () => {
   const statueContainerRef = useRef<HTMLDivElement>(null);
+  const sectionRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (statueContainerRef.current) {
-      const scrollTrigger = gsap.to(statueContainerRef.current, {
-        y: () => {
-          const scrollProgress =
-            ScrollTrigger.getById("about-section")?.progress || 0;
-          return scrollProgress * window.innerHeight;
-        },
-        ease: "power2.inOut",
-        scrollTrigger: {
-          id: "about-section",
-          trigger: "#about-me",
-          start: "top top",
-          end: "bottom bottom",
-          scrub: 0.5,
-          anticipatePin: 1,
-          invalidateOnRefresh: true,
-          markers: false,
-          pin: true,
-          pinSpacing: true,
-        },
-      });
+    let ctx = gsap.context(() => {
+      if (statueContainerRef.current && sectionRef.current) {
+        // Create the scroll trigger with shorter, smoother animation
+        gsap.timeline({
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top top",
+            end: "60% bottom",
+            scrub: 0.8,
+            pin: statueContainerRef.current,
+            anticipatePin: 1,
+            invalidateOnRefresh: true,
+            refreshPriority: -1,
+            onUpdate: (self) => {
+              // Smoother clamping with easing
+              const rawProgress = self.progress;
+              const easedProgress = gsap.utils.clamp(0, 1, rawProgress);
+              const smoothProgress = gsap.utils.interpolate(
+                0,
+                1,
+                easedProgress
+              );
 
-      return () => {
-        scrollTrigger.kill();
-        ScrollTrigger.getById("about-section")?.kill();
-      };
-    }
+              // Gentler transforms
+              const yTransform = smoothProgress * window.innerHeight * 0.15;
+              const scaleTransform = 1 - smoothProgress * 0.15;
+              const rotation = smoothProgress * 2; // Subtle rotation
+
+              gsap.to(statueContainerRef.current, {
+                y: yTransform,
+                scale: Math.max(0.85, scaleTransform),
+                rotation: rotation,
+                transformOrigin: "center center",
+                duration: 0.3,
+                ease: "power2.out",
+              });
+            },
+          },
+        });
+
+        // Smoother initial animation
+        gsap.fromTo(
+          statueContainerRef.current,
+          {
+            y: 0,
+            scale: 1,
+            opacity: 0,
+            rotation: 0,
+          },
+          {
+            opacity: 1,
+            duration: 1.2,
+            ease: "power2.out",
+          }
+        );
+      }
+    });
+
+    return () => {
+      ctx.revert();
+    };
   }, []);
 
   return (
-    <section id="about-me" className="min-h-screen py-12">
-      <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <section id="about-me" className="relative min-h-[150vh]" ref={sectionRef}>
+      <div className="container mx-auto px-4 py-12">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 min-h-screen">
           {/* Left: Text content */}
-          <div className="max-w-2xl">
+          <div className="max-w-2xl flex flex-col justify-center">
             {paragraphs.map((text, idx) => (
               <motion.p
                 key={idx}
@@ -66,6 +110,7 @@ const AboutMe = () => {
                 transition={{
                   duration: 0.9,
                   ease: "easeOut",
+                  delay: idx * 0.1,
                 }}
                 dangerouslySetInnerHTML={{ __html: text }}
               />
@@ -82,33 +127,35 @@ const AboutMe = () => {
 
           {/* Right: 3D Model */}
           <div
-            className="h-screen sticky top-0 overflow-hidden"
+            className="h-screen flex items-center justify-center relative"
             ref={statueContainerRef}
           >
-            <StatueModel />
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="absolute bottom-8 left-0 right-0 text-center px-4"
-            >
-              <motion.h2
-                className="text-3xl md:text-4xl font-bold text-gray-800 mb-2"
+            <div className="relative w-full h-full">
+              <StatueModel />
+              <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.4 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+                className="absolute bottom-8 left-0 right-0 text-center px-4  py-4 rounded-t-lg"
               >
-                Zeno of Citium
-              </motion.h2>
-              <motion.p
-                className="text-lg md:text-xl text-gray-600 italic"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.6 }}
-              >
-                stoics are cool ig
-              </motion.p>
-            </motion.div>
+                <motion.h2
+                  className="text-3xl md:text-4xl font-bold text-gray-800 mb-2"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 0.4 }}
+                >
+                  Zeno of Citium
+                </motion.h2>
+                <motion.p
+                  className="text-lg md:text-xl text-gray-600 italic"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 0.6 }}
+                >
+                  stoics are cool ig
+                </motion.p>
+              </motion.div>
+            </div>
           </div>
         </div>
       </div>

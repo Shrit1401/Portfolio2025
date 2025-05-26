@@ -1,4 +1,7 @@
+"use client";
 import React from "react";
+import { useTransitionRouter } from "next-view-transitions";
+import { usePathname } from "next/navigation";
 
 const links = [
   {
@@ -29,23 +32,59 @@ const links = [
 ];
 
 const GridLinks = () => {
+  const router = useTransitionRouter();
+  const pathname = usePathname();
+
+  function triggerPageTransition() {
+    document.documentElement.animate(
+      [
+        {
+          clipPath: "polygon(25% 75%, 75% 75%, 75% 75%, 25% 75%)",
+        },
+        {
+          clipPath: "polygon(0 100%, 100% 100%, 100% 0,0 0)",
+        },
+      ],
+      {
+        duration: 2000,
+        easing: "cubic-bezier(0.9, 0, 0.1, 1)",
+        pseudoElement: "::view-transition-new(root)",
+      }
+    );
+  }
+
+  const handleNavigation =
+    (path: string) => (e: React.MouseEvent<HTMLAnchorElement>) => {
+      if (path === pathname) {
+        e.preventDefault();
+        return;
+      }
+      if (path.includes("youtube.com")) {
+        window.open(path, "_blank");
+      } else {
+        router.push(path, {
+          onTransitionReady: triggerPageTransition,
+        });
+      }
+    };
   return (
     <div className="min-h-screen w-full">
       <div className="w-full h-full p-2 md:p-4">
         <div className="grid grid-cols-1 md:grid-cols-2 h-full gap-2 md:gap-4">
           {links.map((link, i) => (
-            <a
+            <span
               key={i}
-              href={link.href}
-              target={link.external ? "_blank" : undefined}
-              rel={link.external ? "noopener noreferrer" : undefined}
-              className="group block rounded-lg overflow-hidden relative aspect-[4/3] shadow-lg hover:scale-[1.03] transition-transform duration-300"
+              onClick={handleNavigation(link.href)}
+              className="group block rounded-lg overflow-hidden cursor-pointer relative  aspect-[4/3] shadow-lg
+              hover:brightness-125 transition-all duration-300"
               style={{ background: "#111" }}
             >
               <img
                 src={link.img}
                 alt={link.label.replace(/[^a-zA-Z0-9 ]/g, "")}
-                className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
+                className="w-full h-full
+                group-hover:brightness-125
+                object-cover object-center transition-all duration-500"
                 draggable="false"
               />
               {/* Black gradient overlay */}
@@ -59,11 +98,11 @@ const GridLinks = () => {
                   link.align === "left" ? "left-6" : "right-6"
                 } z-10`}
               >
-                <span className="text-2xl md:text-3xl font-extrabold text-white drop-shadow-lg tracking-tight">
+                <span className="text-2xl md:text-3xl font-extrabold text-white drop-shadow-lg tracking-tight group-hover:tracking-wider transition-all duration-300">
                   {link.label}
                 </span>
               </div>
-            </a>
+            </span>
           ))}
         </div>
       </div>
