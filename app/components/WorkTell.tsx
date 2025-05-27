@@ -141,42 +141,37 @@ const WorkTell = () => {
     <section ref={sectionRef} className="sticky">
       <div ref={titlesContainerRef} className="titles">
         <div className="title text-center">
-          <h1 className="title-1 text-6xl font-bold">I work</h1>
-          <h1 className="title-2 text-6xl font-bold">I work</h1>
-          <h1 className="title-3 text-6xl font-bold">I work</h1>
+          <h1 className="title-1 text-6xl font-bold">The only way to do</h1>
+          <h1 className="title-2 text-6xl font-bold">The only way to do</h1>
+          <h1 className="title-3 text-6xl font-bold">The only way to do</h1>
         </div>
         <div className="title text-center">
-          <h1 className="title-1 text-4xl text-gray-300 mt-2">
-            because it's fun
-          </h1>
-          <h1 className="title-2 text-4xl text-gray-300 mt-2">
-            because it's fun
-          </h1>
-          <h1 className="title-3 text-4xl text-gray-300 mt-2">
-            because it's fun
-          </h1>
+          <h1 className="title-1 text-4xl text-gray-300 mt-2">great work</h1>
+          <h1 className="title-2 text-4xl text-gray-300 mt-2">great work</h1>
+          <h1 className="title-3 text-4xl text-gray-300 mt-2">great work</h1>
         </div>
         <div className="title text-center">
           <h1 className="title-1 text-2xl italic text-gray-400 mt-1">
-            not to flex
+            is to love
           </h1>
           <h1 className="title-2 text-2xl italic text-gray-400 mt-1">
-            not to flex
+            is to love
           </h1>
           <h1 className="title-3 text-2xl italic text-gray-400 mt-1">
-            not to flex
+            is to love
           </h1>
         </div>
         <div className="title text-center">
           <h1 className="title-1 text-xl text-white mt-3 font-medium">
-            find your fun.
+            what you do.
           </h1>
           <h1 className="title-2 text-xl text-white mt-3 font-medium">
-            find your fun.
+            what you do.
           </h1>
           <h1 className="title-3 text-xl text-white mt-3 font-medium">
-            find your fun.
+            what you do.
           </h1>
+          <p className="text-sm text-gray-500 mt-1">– Steve Jobs</p>
         </div>
       </div>
       <div ref={imagesContainerRef} className="images">

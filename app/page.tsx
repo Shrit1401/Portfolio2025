@@ -7,6 +7,7 @@ import AboutMe from "./components/AboutMe";
 import GridLinks from "./components/GridLinks";
 import { Revealer } from "./components/Revealer";
 import Footer from "./components/Footer";
+import Substack from "./components/Substack";
 
 export default function Home() {
   return (
@@ -19,6 +20,7 @@ export default function Home() {
         <HeroText />
       </div>
       <AboutMe />
+      <Substack />
       <GridLinks />
       <Footer />
     </div>

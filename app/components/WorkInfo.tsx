@@ -68,6 +68,16 @@ const WorkInfo = () => {
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
   const [projects, setProjects] = useState<Work[]>([]);
 
+  // Floating preview state
+  const [preview, setPreview] = useState<{
+    visible: boolean;
+    x: number;
+    y: number;
+    img: string;
+    alt: string;
+  }>({ visible: false, x: 0, y: 0, img: "", alt: "" });
+  const previewRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     const fetchProjects = async () => {
       const data = await getWorks();
@@ -116,6 +126,7 @@ const WorkInfo = () => {
     });
   }, [projects]);
 
+  // Remove all blur from bg image animation
   useEffect(() => {
     bgImgRefs.current.forEach((img, i) => {
       if (!img) return;
@@ -123,7 +134,7 @@ const WorkInfo = () => {
         gsap.to(img, {
           autoAlpha: 1,
           scale: 1,
-          filter: "blur(0.5vw) grayscale(0.2)",
+          filter: "grayscale(0.2)",
           duration: 0.7,
           ease: "power3.out",
           zIndex: 1,
@@ -132,7 +143,7 @@ const WorkInfo = () => {
         gsap.to(img, {
           autoAlpha: 0,
           scale: 1.08,
-          filter: "blur(2vw) grayscale(0.7)",
+          filter: "grayscale(0.7)",
           duration: 0.7,
           ease: "power3.inOut",
           zIndex: 0,
@@ -141,41 +152,79 @@ const WorkInfo = () => {
     });
   }, [hoveredIdx]);
 
+  // Animate floating preview
+  useEffect(() => {
+    if (previewRef.current && preview.visible) {
+      gsap.to(previewRef.current, {
+        x: preview.x,
+        y: preview.y,
+        scale: 1,
+        autoAlpha: 1,
+        duration: 0.3,
+        ease: "power3.out",
+      });
+    } else if (previewRef.current && !preview.visible) {
+      gsap.to(previewRef.current, {
+        autoAlpha: 0,
+        scale: 0.85,
+        duration: 0.2,
+        ease: "power3.inOut",
+      });
+    }
+  }, [preview]);
+
+  // Mouse move handler for cards
+  const handleCardMouseMove = (e: React.MouseEvent, idx: number) => {
+    const img = urlFor(projects[idx].image).url();
+    setPreview({
+      visible: true,
+      x: e.clientX + 24,
+      y: e.clientY - 40,
+      img,
+      alt: projects[idx].title,
+    });
+    setHoveredIdx(idx);
+  };
+
+  // Mouse leave handler for cards
+  const handleCardMouseLeave = () => {
+    setPreview((prev) => ({ ...prev, visible: false }));
+    setHoveredIdx(null);
+  };
+
   return (
     <div className="workinfo-section flex py-10 items-center justify-center">
-      {/* Background images */}
-      <div className="absolute inset-0 w-full h-full pointer-events-none select-none z-0">
-        {projects.map((project, idx) => (
+      {/* Floating image preview */}
+      {preview.visible && (
+        <div
+          ref={previewRef}
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            pointerEvents: "none",
+            zIndex: 50,
+            width: 260,
+            height: 180,
+            transform: `translate3d(${preview.x}px, ${preview.y}px, 0)`,
+          }}
+          className="rounded-2xl shadow-2xl border border-white/30 bg-white/10 backdrop-blur-lg overflow-hidden scale-90 opacity-0 transition-all duration-200"
+        >
           <img
-            key={project.title}
-            ref={(el) => {
-              bgImgRefs.current[idx] = el;
-            }}
-            src={urlFor(project.image).url()}
-            alt={project.title}
-            style={{
-              position: "absolute",
-              top: 0,
-              left: 0,
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-              opacity: 0,
-              zIndex: 0,
-              pointerEvents: "none",
-              filter: "blur(.5vw) grayscale(0.7)",
-              transition: "none",
-            }}
+            src={preview.img}
+            alt={preview.alt}
+            className="w-full h-full object-cover"
+            draggable={false}
           />
-        ))}
-      </div>
+        </div>
+      )}
       {/* Large low-opacity background word */}
       <span className="workinfo-bgword pointer-events-none select-none absolute text-[20vw] left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-black/5 font-black tracking-tight z-10">
         Flex
       </span>
       <div className="w-full max-w-3xl px-4 z-20">
         <h2 className="workinfo-title text-3xl md:text-5xl font-bold text-neutral-900 mb-10 tracking-tight text-left">
-          Recent Projects
+          Cool Projects
         </h2>
         <div ref={listRef} className="flex flex-col gap-16 md:gap-20">
           {projects.map((project, idx) => {
@@ -184,11 +233,11 @@ const WorkInfo = () => {
             return (
               <div
                 key={project.title}
-                className={`relative flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-8 pb-10 border-b border-neutral-300 group ${
+                className={`relative flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-8 pb-10 border-b border-neutral-300 group hover:cursor-pointer ${
                   idx % 2 === 1 ? "md:flex-row-reverse" : ""
                 }`}
-                onMouseEnter={() => setHoveredIdx(idx)}
-                onMouseLeave={() => setHoveredIdx(null)}
+                onMouseMove={(e) => handleCardMouseMove(e, idx)}
+                onMouseLeave={handleCardMouseLeave}
               >
                 {/* Accent bar */}
                 <span
@@ -224,7 +273,7 @@ const WorkInfo = () => {
                         href={link.link}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="px-5 py-2 rounded-full bg-neutral-100 text-sky-600 hover:bg-sky-400 hover:text-white font-medium text-base md:text-lg transition-all duration-200 shadow-sm border border-neutral-300 hover:border-sky-400"
+                        className="inline-block px-6 py-2 rounded-full bg-black/5 text-neutral-700 font-semibold text-base tracking-wide border border-black/10 shadow-sm backdrop-blur-md transition-all duration-200 hover:bg-sky-500/80 hover:text-white hover:border-sky-400/60 hover:shadow-lg"
                       >
                         {link.name}
                       </a>

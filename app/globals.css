@@ -7,12 +7,6 @@
 :root {
   --background: #f8f6f0;
   --foreground: #171717;
-  --burgundy: #7b3737;
-  --olive: #3b4f1b;
-  --ochre: #b89b2b;
-  --purple: #6b46c1;
-  --teal: #2c7a7b;
-  --coral: #e53e3e;
 }
 
 html {
@@ -38,31 +32,9 @@ pre {
   width: 100vw;
   height: 100vh;
   transform-origin: center top;
-  background: var(--teal);
-  animation: colorChange 10s infinite;
+  background: var(--foreground);
   pointer-events: none;
   z-index: 99;
-}
-
-@keyframes colorChange {
-  0% {
-    background: var(--burgundy);
-  }
-  20% {
-    background: var(--olive);
-  }
-  40% {
-    background: var(--ochre);
-  }
-  60% {
-    background: var(--purple);
-  }
-  80% {
-    background: var(--teal);
-  }
-  100% {
-    background: var(--coral);
-  }
 }
 
 ::view-transition-old(root),

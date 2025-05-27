@@ -9,8 +9,6 @@ export default function Loader() {
   const imgRefs = useRef<(HTMLDivElement | null)[]>([]);
   const textRef = useRef<HTMLDivElement>(null);
   const progressRef = useRef<HTMLDivElement>(null);
-  const [isReady, setIsReady] = useState(false);
-  const [isVisible, setIsVisible] = useState(true);
   const [loadingText, setLoadingText] = useState("Brewing pixels...");
 
   const funnyTexts = [
@@ -35,9 +33,6 @@ export default function Loader() {
     });
     gsap.set(textRef.current, { opacity: 0, y: 30 });
     gsap.set(progressRef.current, { scaleX: 0 });
-
-    // Show the loader now that initial states are set
-    setIsReady(true);
 
     // Create initial entrance animation timeline
     const entranceTl = gsap.timeline();
@@ -163,7 +158,6 @@ export default function Loader() {
         },
         "-=0.5"
       );
-    setIsVisible(false);
   }, []);
 
   return (
@@ -172,7 +166,6 @@ export default function Loader() {
       className="fixed w-screen h-screen bg-[#111] pointer-events-none z-[999] overflow-hidden"
       style={{
         clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
-        visibility: isVisible || isReady ? "visible" : "hidden",
       }}
     >
       {/* Minimal geometric patterns */}
