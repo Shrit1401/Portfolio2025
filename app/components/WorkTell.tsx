@@ -9,16 +9,16 @@ const WorkTell = () => {
   const scrollTriggerRef = useRef<ScrollTrigger | null>(null);
 
   const cardPositions = [
-    { top: "30%", left: "55%" },
-    { top: "20%", left: "25%" },
-    { top: "50%", left: "10%" },
-    { top: "60%", left: "40%" },
-    { top: "30%", left: "30%" },
-    { top: "60%", left: "60%" },
-    { top: "20%", left: "50%" },
-    { top: "60%", left: "10%" },
-    { top: "20%", left: "40%" },
-    { top: "45%", left: "55%" },
+    { top: "30%", left: "55%", text: "trophies" },
+    { top: "20%", left: "25%", text: "me dotty" },
+    { top: "50%", left: "10%", text: "a tree lol" },
+    { top: "60%", left: "40%", text: "my dog" },
+    { top: "30%", left: "30%", text: "dream to reality" },
+    { top: "60%", left: "60%", text: "i look cool" },
+    { top: "20%", left: "50%", text: "when i was popular" },
+    { top: "60%", left: "10%", text: "kiddos" },
+    { top: "20%", left: "40%", text: "it will be mine" },
+    { top: "45%", left: "55%", text: "sinisters" },
   ];
 
   useEffect(() => {
@@ -140,20 +140,43 @@ const WorkTell = () => {
   return (
     <section ref={sectionRef} className="sticky">
       <div ref={titlesContainerRef} className="titles">
-        <div className="title">
-          <h1 className="title-1">Showcase Hub</h1>
-          <h1 className="title-2">Showcase Hub</h1>
-          <h1 className="title-3">Showcase Hub</h1>
+        <div className="title text-center">
+          <h1 className="title-1 text-6xl font-bold">I work</h1>
+          <h1 className="title-2 text-6xl font-bold">I work</h1>
+          <h1 className="title-3 text-6xl font-bold">I work</h1>
         </div>
-        <div className="title">
-          <h1 className="title-1">Shrit Stuff</h1>
-          <h1 className="title-2">Shrit Stuff</h1>
-          <h1 className="title-3">Shrit Stuff</h1>
+        <div className="title text-center">
+          <h1 className="title-1 text-4xl text-gray-300 mt-2">
+            because it's fun
+          </h1>
+          <h1 className="title-2 text-4xl text-gray-300 mt-2">
+            because it's fun
+          </h1>
+          <h1 className="title-3 text-4xl text-gray-300 mt-2">
+            because it's fun
+          </h1>
         </div>
-        <div className="title">
-          <h1 className="title-1">NICE BOI</h1>
-          <h1 className="title-2">NICE BOI</h1>
-          <h1 className="title-3">NICE BOI</h1>
+        <div className="title text-center">
+          <h1 className="title-1 text-2xl italic text-gray-400 mt-1">
+            not to flex
+          </h1>
+          <h1 className="title-2 text-2xl italic text-gray-400 mt-1">
+            not to flex
+          </h1>
+          <h1 className="title-3 text-2xl italic text-gray-400 mt-1">
+            not to flex
+          </h1>
+        </div>
+        <div className="title text-center">
+          <h1 className="title-1 text-xl text-white mt-3 font-medium">
+            find your fun.
+          </h1>
+          <h1 className="title-2 text-xl text-white mt-3 font-medium">
+            find your fun.
+          </h1>
+          <h1 className="title-3 text-xl text-white mt-3 font-medium">
+            find your fun.
+          </h1>
         </div>
       </div>
       <div ref={imagesContainerRef} className="images">
@@ -166,7 +189,14 @@ const WorkTell = () => {
               left: pos.left,
             }}
           >
-            <img src={`/work/${index + 1}.png`} alt={`Card ${index + 1}`} />
+            <div className="card-content">
+              <img
+                src={`/work/img-${index + 1}.jpeg`}
+                alt={`Card ${index + 1}`}
+                style={{ width: "100%", height: "auto" }}
+              />
+              <p className="card-text">{pos.text}</p>
+            </div>
           </div>
         ))}
       </div>

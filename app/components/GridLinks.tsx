@@ -26,7 +26,7 @@ const links = [
   {
     href: "/nerd",
     img: "/wayout/work.png",
-    label: "Nerd \u2192", // Nerd →
+    label: "Nerd Research \u2192", // Nerd →
     align: "right",
   },
 ];
@@ -98,9 +98,10 @@ const GridLinks = () => {
                   link.align === "left" ? "left-6" : "right-6"
                 } z-10`}
               >
-                <span className="text-2xl md:text-3xl font-extrabold text-white drop-shadow-lg tracking-tight group-hover:tracking-wider transition-all duration-300">
-                  {link.label}
-                </span>
+                <span
+                  className="text-2xl md:text-3xl font-extrabold text-white drop-shadow-lg tracking-tight group-hover:tracking-wider transition-all duration-300"
+                  dangerouslySetInnerHTML={{ __html: link.label }}
+                />
               </div>
             </span>
           ))}

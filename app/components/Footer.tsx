@@ -128,7 +128,6 @@ const ExplosionContainer = () => {
   const footerRef = useRef<HTMLDivElement>(null);
   const particleRef = useRef<Particle[]>([]);
   const [explosion, setExplosion] = useState(false);
-  const controls = useAnimation();
   const isInView = useInView(explosionRef, { once: false });
 
   const config = {
@@ -144,7 +143,7 @@ const ExplosionContainer = () => {
   const imgCounts = 15;
   const imgPaths = Array.from(
     { length: imgCounts },
-    (_, i) => `/footer/${i + 1}.png`
+    (_, i) => `/footer/img-${i + 1}.jpeg`
   );
 
   class Particle {
