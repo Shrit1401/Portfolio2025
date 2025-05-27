@@ -1,5 +1,7 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
+import { getPastEvents } from "@/app/lib/server";
+import { Past } from "../lib/types";
 
 const accentColors = [
   "#7B3737", // burgundy
@@ -134,6 +136,15 @@ const shapeSVG = (shape: string, color: string, ref: any) => {
 const PastTell = () => {
   const listRef = useRef<HTMLDivElement>(null);
   const svgRefs = useRef<(SVGSVGElement | null)[]>([]);
+  const [events, setEvents] = useState<Past[]>([]);
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      const data = await getPastEvents();
+      setEvents(data);
+    };
+    fetchEvents();
+  }, []);
 
   useEffect(() => {
     if (listRef.current) {
@@ -173,7 +184,7 @@ const PastTell = () => {
         });
       }
     });
-  }, []);
+  }, [events]);
 
   return (
     <section className="pasttell-section relative flex py-10 items-center justify-center min-h-screen ">
@@ -213,7 +224,7 @@ const PastTell = () => {
                       {event.title}
                     </h2>
                     <span className="pasttell-date text-lg md:text-xl text-neutral-500 font-bold">
-                      • {event.date}
+                      • {event.year}
                     </span>
                   </div>
                   <p className="text-neutral-700 mt-2 text-base md:text-lg max-w-xl">

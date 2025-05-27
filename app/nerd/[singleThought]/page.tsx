@@ -1,6 +1,6 @@
 "use client";
 
-import React, { ReactElement, ReactNode } from "react";
+import React, { ReactElement, ReactNode, useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Navbar from "../../components/Navbar";
 import { Revealer } from "../../components/Revealer";
@@ -9,135 +9,81 @@ import Footer from "@/app/components/Footer";
 import ResearchSense from "@/app/components/research/ResearchSense";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import remarkMath from "remark-math";
 import rehypeRaw from "rehype-raw";
 import rehypeSlug from "rehype-slug";
 import rehypeHighlight from "rehype-highlight";
+import rehypeKatex from "rehype-katex";
 import "highlight.js/styles/vs2015.css";
+import "katex/dist/katex.min.css";
+import { getResearchFromSlug } from "@/app/lib/server";
+import { Research } from "@/app/lib/types";
+import { urlFor } from "@/sanity/lib/image";
 
 type CalloutType = "note" | "warning" | "tip";
 
 export default function ResearchPage() {
   const params = useParams();
-  const slug = params.slug as string;
+  const slug = params.singleThought as string;
+  const [research, setResearch] = useState<Research | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  // This would typically fetch the markdown content based on the slug
-  const markdownContent = `
-# Understanding Neural Networks
+  useEffect(() => {
+    const fetchResearch = async () => {
+      try {
+        const data = await getResearchFromSlug(slug);
+        if (data && data.length > 0) {
+          setResearch(data[0]);
+        } else {
+          setError("Research not found");
+        }
+      } catch (err) {
+        setError("Failed to load research");
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-> [!note]
-> This is a comprehensive guide to understanding neural networks and their applications in modern AI.
+    fetchResearch();
+  }, [slug]);
 
-## Introduction
-Neural networks are a fundamental concept in modern artificial intelligence. They are inspired by the human brain's structure and function, consisting of interconnected nodes (neurons) that process and transmit information.
+  if (loading) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-black">
+        <div className="relative w-24 h-24">
+          {/* Outer ring */}
+          <div className="absolute inset-0 border-4 border-gray-800 rounded-full animate-[spin_3s_linear_infinite]"></div>
+          {/* Middle ring */}
+          <div className="absolute inset-2 border-4 border-gray-700 rounded-full animate-[spin_2s_linear_infinite_reverse]"></div>
+          {/* Inner ring */}
+          <div className="absolute inset-4 border-4 border-gray-600 rounded-full animate-[spin_1s_linear_infinite]"></div>
+          {/* Center dot */}
+          <div className="absolute inset-[42%] bg-gray-500 rounded-full animate-pulse"></div>
+        </div>
+        <div className="mt-8 text-gray-400 text-lg font-light tracking-wider animate-pulse">
+          Loading thoughts...
+        </div>
+      </div>
+    );
+  }
 
-## Key Concepts
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-red-500 text-xl">{error}</div>
+      </div>
+    );
+  }
 
-### 1. Neurons
-Neurons are the basic building blocks of neural networks. They receive inputs, process them, and produce outputs.
-
-\`\`\`python
-class Neuron:
-    def __init__(self, weights, bias):
-        self.weights = weights
-        self.bias = bias
-    
-    def activate(self, inputs):
-        return sum(w * x for w, x in zip(self.weights, inputs)) + self.bias
-\`\`\`
-
-### 2. Weights
-Weights determine the strength of connections between neurons.
-
-| Weight Type | Description |
-|------------|-------------|
-| Positive   | Excitatory connection |
-| Negative   | Inhibitory connection |
-| Zero       | No connection |
-
-### 3. Activation Functions
-Activation functions introduce non-linearity into the network.
-
-\`\`\`python
-def sigmoid(x):
-    return 1 / (1 + math.exp(-x))
-
-def relu(x):
-    return max(0, x)
-\`\`\`
-
-## Applications
-
-### Image Recognition
-- Convolutional Neural Networks (CNNs)
-- Object Detection
-- Image Classification
-
-### Natural Language Processing
-- Recurrent Neural Networks (RNNs)
-- Transformers
-- BERT Models
-
-### Autonomous Systems
-- Reinforcement Learning
-- Deep Q-Networks
-- Policy Gradients
-
-## Code Example: Simple Neural Network
-
-\`\`\`python
-import numpy as np
-
-class SimpleNeuralNetwork:
-    def __init__(self, input_size, hidden_size, output_size):
-        self.weights1 = np.random.randn(input_size, hidden_size)
-        self.weights2 = np.random.randn(hidden_size, output_size)
-    
-    def forward(self, X):
-        self.hidden = np.dot(X, self.weights1)
-        self.hidden_activation = self.sigmoid(self.hidden)
-        self.output = np.dot(self.hidden_activation, self.weights2)
-        return self.sigmoid(self.output)
-\`\`\`
-
-## Important Notes
-
-> [!warning]
-> Always normalize your input data before training neural networks.
-
-> [!tip]
-> Use batch normalization to improve training stability.
-
-## Mathematical Formulas
-
-The forward propagation can be represented as:
-
-$$
-h = \sigma(W_1x + b_1)
-$$
-$$
-y = \sigma(W_2h + b_2)
-$$
-
-## References
-
-1. [Deep Learning Book](https://www.deeplearningbook.org/)
-2. [Neural Networks and Deep Learning](http://neuralnetworksanddeeplearning.com/)
-
-## Task List
-
-- [x] Implement basic neural network
-- [ ] Add backpropagation
-- [ ] Test with MNIST dataset
-- [ ] Optimize hyperparameters
-
-## Footnotes
-
-[^1]: This is a footnote reference
-[^2]: Another footnote reference
-
-[^1]: First footnote content
-[^2]: Second footnote content
-`;
+  if (!research) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-gray-500 text-xl">Research not found</div>
+      </div>
+    );
+  }
 
   return (
     <div className="relative w-full home">
@@ -146,17 +92,22 @@ $$
       <div className="flex flex-col min-h-screen">
         <Navbar />
         <ResearchText
-          title={"How do ppl work??"}
-          time={"10min read"}
-          date={"2025-01-01"}
-          img="https://sdmntprwestus2.oaiusercontent.com/files/00000000-5108-61f8-a39a-514b008cabec/raw?se=2025-05-27T09%3A27%3A26Z&sp=r&sv=2024-08-04&sr=b&scid=f9e71290-2353-5b61-bc86-1ffb660fe796&skoid=c953efd6-2ae8-41b4-a6d6-34b1475ac07c&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-05-26T10%3A34%3A10Z&ske=2025-05-27T10%3A34%3A10Z&sks=b&skv=2024-08-04&sig=9QAQXFVccsKcQZSpWgonlJDiyHjO8PqKWfMMfK0rjRU%3D"
+          title={research.title || "Untitled"}
+          time={"5min read"}
+          date={research.date || new Date().toISOString().split("T")[0]}
+          img={urlFor(research.image).url()}
         />
       </div>
       <main className="flex-grow container mx-auto px-4 py-8">
-        <article className="prose lg:prose-xl mx-auto prose-pre:bg-transparent prose-pre:m-0 prose-pre:p-0 ">
+        <article className="prose lg:prose-xl mx-auto prose-pre:bg-transparent prose-pre:m-0 prose-pre:p-0 prose-headings:scroll-mt-20">
           <ReactMarkdown
-            remarkPlugins={[remarkGfm]}
-            rehypePlugins={[rehypeRaw, rehypeSlug, rehypeHighlight]}
+            remarkPlugins={[remarkGfm, remarkMath]}
+            rehypePlugins={[
+              rehypeRaw,
+              rehypeSlug,
+              rehypeHighlight,
+              rehypeKatex,
+            ]}
             components={{
               // Style callouts
               blockquote: ({ children, ...props }) => {
@@ -273,7 +224,7 @@ $$
               },
             }}
           >
-            {markdownContent}
+            {research.markdown || ""}
           </ReactMarkdown>
         </article>
       </main>

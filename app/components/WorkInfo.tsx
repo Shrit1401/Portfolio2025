@@ -1,5 +1,9 @@
+"use client";
 import React, { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
+import { getWorks } from "@/app/lib/server";
+import { Work } from "../lib/types";
+import { urlFor } from "@/sanity/lib/image";
 
 const accentColors = [
   "#7B3737", // burgundy
@@ -10,68 +14,6 @@ const accentColors = [
   "#E53E3E", // coral
 ];
 const shapes = ["triangle", "circle", "square"];
-
-const projects = [
-  {
-    title: "no friend zone",
-    year: 2024,
-    description: "ai which tries to friendzone you",
-    links: [
-      { label: "website", url: "https://nofriendzone.shrit.in/" },
-      { label: "github", url: "https://github.com/Shrit1401/NoFriendZone" },
-    ],
-    image: "/work/actualwork/friend.png",
-  },
-  {
-    title: "sayonara hokage",
-    year: 2024,
-    description: "ai which tells you your story",
-    links: [
-      {
-        label: "scuffed demo",
-        url: "https://www.loom.com/share/dbeef8ab75aa442fb7966419f4c1b679?sid=06dcc775-049e-4199-b7f3-0b5571cbb457",
-      },
-      { label: "github", url: "https://github.com/Shrit1401/Sayonara-Hokage" },
-    ],
-    image: "/work/actualwork/sayonara.png",
-  },
-  {
-    title: "hokage os",
-    year: 2024,
-    description: "a simple os which makes your chrome look sexy",
-    links: [
-      { label: "youtube", url: "https://youtu.be/2jZE0fQ-Sj0" },
-      { label: "website", url: "https://hokageos.shrit.in/" },
-      { label: "github", url: "https://github.com/Shrit1401/HokageOS#" },
-    ],
-    image: "/work/3.png",
-  },
-  {
-    title: "clientbase",
-    year: 2024,
-    description: "manage your agency client easily",
-    links: [
-      { label: "website", url: "#" },
-      { label: "youtube", url: "#" },
-    ],
-    image: "/work/4.png",
-  },
-  {
-    title: "autisure",
-    year: 2022,
-    description: "world's first autism assured app",
-    links: [{ label: "play store", url: "#" }],
-    image: "/work/5.png",
-  },
-  {
-    title: "glow emotions",
-    year: 2022,
-    description:
-      "a peaceful rage game, i made using unity, it's now down because of being so old",
-    links: [{ label: "itch.io", url: "#" }],
-    image: "/work/6.png",
-  },
-];
 
 const shapeSVG = (shape: string, color: string, ref: any) => {
   switch (shape) {
@@ -124,6 +66,15 @@ const WorkInfo = () => {
   const svgRefs = useRef<(SVGSVGElement | null)[]>([]);
   const bgImgRefs = useRef<(HTMLImageElement | null)[]>([]);
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
+  const [projects, setProjects] = useState<Work[]>([]);
+
+  useEffect(() => {
+    const fetchProjects = async () => {
+      const data = await getWorks();
+      setProjects(data);
+    };
+    fetchProjects();
+  }, []);
 
   useEffect(() => {
     if (listRef.current) {
@@ -163,7 +114,7 @@ const WorkInfo = () => {
         });
       }
     });
-  }, []);
+  }, [projects]);
 
   useEffect(() => {
     bgImgRefs.current.forEach((img, i) => {
@@ -200,7 +151,7 @@ const WorkInfo = () => {
             ref={(el) => {
               bgImgRefs.current[idx] = el;
             }}
-            src={project.image}
+            src={urlFor(project.image).url()}
             alt={project.title}
             style={{
               position: "absolute",
@@ -212,7 +163,7 @@ const WorkInfo = () => {
               opacity: 0,
               zIndex: 0,
               pointerEvents: "none",
-              filter: "blur(2vw) grayscale(0.7)",
+              filter: "blur(.5vw) grayscale(0.7)",
               transition: "none",
             }}
           />
@@ -267,15 +218,15 @@ const WorkInfo = () => {
                     {project.description}
                   </p>
                   <div className="flex gap-3 mt-4 flex-wrap">
-                    {project.links.map((link) => (
+                    {project.usefullinks?.map((link: any) => (
                       <a
-                        key={link.label}
-                        href={link.url}
+                        key={link.name}
+                        href={link.link}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="px-5 py-2 rounded-full bg-neutral-100 text-sky-600 hover:bg-sky-400 hover:text-white font-medium text-base md:text-lg transition-all duration-200 shadow-sm border border-neutral-300 hover:border-sky-400"
                       >
-                        {link.label}
+                        {link.name}
                       </a>
                     ))}
                   </div>

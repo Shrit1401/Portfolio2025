@@ -1,17 +1,7 @@
+import { Research } from "@/app/lib/types";
 import ResearchCard from "./ResearchCard";
 import { motion } from "framer-motion";
-
-interface Research {
-  title: string;
-  slug: string;
-  preview: string;
-  date: string;
-  image: string;
-}
-
-interface ResearchGridProps {
-  research: Research[];
-}
+import { urlFor } from "@/sanity/lib/image";
 
 const container = {
   hidden: { opacity: 0 },
@@ -23,6 +13,10 @@ const container = {
   },
 };
 
+interface ResearchGridProps {
+  research: Research[];
+}
+
 export default function ResearchGrid({ research }: ResearchGridProps) {
   return (
     <motion.div
@@ -33,7 +27,7 @@ export default function ResearchGrid({ research }: ResearchGridProps) {
     >
       {research.map((item) => (
         <motion.div
-          key={item.slug}
+          key={item.slug.current}
           variants={{
             hidden: { opacity: 0, y: 20 },
             show: { opacity: 1, y: 0 },
@@ -41,10 +35,10 @@ export default function ResearchGrid({ research }: ResearchGridProps) {
         >
           <ResearchCard
             title={item.title}
-            slug={item.slug}
-            preview={item.preview}
+            slug={item.slug.current}
+            preview={item.description}
             date={item.date}
-            image={item.image}
+            image={urlFor(item.image).url()}
           />
         </motion.div>
       ))}
