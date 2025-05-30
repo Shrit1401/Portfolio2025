@@ -1,15 +1,29 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, type FC } from "react";
 import gsap from "gsap";
 import Newsletter from "./Newsletter";
 
-const burgundy = "#7B3737";
-const olive = "#3B4F1B";
-const ochre = "#B89B2B";
-const purple = "#6B46C1";
-const teal = "#2C7A7B";
-const coral = "#E53E3E";
+// Constants
+const COLORS = {
+  burgundy: "#7B3737",
+  olive: "#3B4F1B",
+  ochre: "#B89B2B",
+  purple: "#6B46C1",
+  teal: "#2C7A7B",
+  coral: "#E53E3E",
+} as const;
 
-const TimeDisplay = () => {
+const ANIMATION_DELAYS = {
+  initial: 500,
+  shapes: 5,
+  text: 5.5,
+  globe: 5,
+  bottom: 5.5,
+  dontClick: 5.7,
+  scrollDown: 5.9,
+  newsletter: 6,
+} as const;
+
+const TimeDisplay: FC = () => {
   const [mounted, setMounted] = useState(false);
   const [time, setTime] = useState(new Date());
 
@@ -31,7 +45,7 @@ const TimeDisplay = () => {
   );
 };
 
-const HeroText = () => {
+const HeroText: FC = () => {
   const [animate, setAnimate] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const shapesRef = useRef<(SVGSVGElement | null)[]>([]);
@@ -43,144 +57,113 @@ const HeroText = () => {
   const newsletterRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Start animation after loader finishes
-    const timer = setTimeout(() => {
-      setAnimate(true);
-      setIsVisible(true);
-
-      // Animate shapes with increased delay
+    const animateShapes = () => {
       shapesRef.current.forEach((shape, index) => {
-        if (shape) {
-          gsap.fromTo(
-            shape,
-            { scale: 0, opacity: 0 },
-            {
-              scale: 1,
-              opacity: 1,
-              duration: 0.8,
-              ease: "power2.out",
-              delay: 5 + 0.5 + index * 0.2,
-            }
-          );
+        if (!shape) return;
 
-          // Add subtle continuous rotation with different delays
-          gsap.to(shape, {
-            rotation: 360,
-            duration: 20 + index * 5,
-            repeat: -1,
-            ease: "none",
-            transformOrigin: "center center",
-            delay: 5 + index * 2,
-          });
+        // Initial animation
+        gsap.fromTo(
+          shape,
+          { scale: 0, opacity: 0 },
+          {
+            scale: 1,
+            opacity: 1,
+            duration: 0.8,
+            ease: "power2.out",
+            delay: ANIMATION_DELAYS.shapes + 0.5 + index * 0.2,
+          }
+        );
 
-          // Color transition animation
-          const colors = [
-            [burgundy, purple],
-            [olive, teal],
-            [ochre, coral],
-          ][index];
-
-          gsap.to(shape, {
-            fill: colors[1],
-            stroke: colors[1],
-            duration: 3,
-            repeat: -1,
-            yoyo: true,
-            ease: "power1.inOut",
-            delay: 5 + index * 1.5,
-          });
-        }
-      });
-
-      // Animate text with increased delay
-      textRef.current.forEach((text, index) => {
-        if (text) {
-          gsap.fromTo(
-            text,
-            { y: 40, opacity: 0 },
-            {
-              y: 0,
-              opacity: 1,
-              duration: 1.1,
-              ease: "power2.out",
-              delay: 5 + 0.5 + index * 0.18,
-            }
-          );
-        }
-      });
-
-      // Animate globe with increased delay
-      if (globeRef.current) {
-        gsap.to(globeRef.current, {
+        // Continuous rotation
+        gsap.to(shape, {
           rotation: 360,
-          duration: 8,
+          duration: 20 + index * 5,
           repeat: -1,
           ease: "none",
           transformOrigin: "center center",
-          delay: 5,
+          delay: ANIMATION_DELAYS.shapes + index * 2,
         });
-      }
 
-      // Animate bottom elements
-      if (bottomElementsRef.current) {
+        // Color transition
+        const colors = [
+          [COLORS.burgundy, COLORS.purple],
+          [COLORS.olive, COLORS.teal],
+          [COLORS.ochre, COLORS.coral],
+        ][index];
+
+        gsap.to(shape, {
+          fill: colors[1],
+          stroke: colors[1],
+          duration: 3,
+          repeat: -1,
+          yoyo: true,
+          ease: "power1.inOut",
+          delay: ANIMATION_DELAYS.shapes + index * 1.5,
+        });
+      });
+    };
+
+    const animateText = () => {
+      textRef.current.forEach((text, index) => {
+        if (!text) return;
         gsap.fromTo(
-          bottomElementsRef.current,
+          text,
+          { y: 40, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 1.1,
+            ease: "power2.out",
+            delay: ANIMATION_DELAYS.text + index * 0.18,
+          }
+        );
+      });
+    };
+
+    const animateGlobe = () => {
+      if (!globeRef.current) return;
+      gsap.to(globeRef.current, {
+        rotation: 360,
+        duration: 8,
+        repeat: -1,
+        ease: "none",
+        transformOrigin: "center center",
+        delay: ANIMATION_DELAYS.globe,
+      });
+    };
+
+    const animateBottomElements = () => {
+      const elements = [
+        { ref: bottomElementsRef, delay: ANIMATION_DELAYS.bottom },
+        { ref: dontClickRef, delay: ANIMATION_DELAYS.dontClick },
+        { ref: scrollDownRef, delay: ANIMATION_DELAYS.scrollDown },
+        { ref: newsletterRef, delay: ANIMATION_DELAYS.newsletter },
+      ];
+
+      elements.forEach(({ ref, delay }) => {
+        if (!ref.current) return;
+        gsap.fromTo(
+          ref.current,
           { y: 20, opacity: 0 },
           {
             y: 0,
             opacity: 1,
             duration: 1,
             ease: "power2.out",
-            delay: 5.5,
+            delay,
           }
         );
-      }
+      });
+    };
 
-      // Animate "Don't Click Me" link
-      if (dontClickRef.current) {
-        gsap.fromTo(
-          dontClickRef.current,
-          { x: 20, opacity: 0 },
-          {
-            x: 0,
-            opacity: 1,
-            duration: 1,
-            ease: "power2.out",
-            delay: 5.7,
-          }
-        );
-      }
-
-      // Animate scroll down arrow
-      if (scrollDownRef.current) {
-        gsap.fromTo(
-          scrollDownRef.current,
-          { y: 20, opacity: 0 },
-          {
-            y: 0,
-            opacity: 1,
-            duration: 1,
-            ease: "power2.out",
-            delay: 5.9,
-          }
-        );
-      }
-
-      // Animate newsletter
-      if (newsletterRef.current) {
-        gsap.fromTo(
-          newsletterRef.current,
-          { y: 20, opacity: 0 },
-          {
-            y: 0,
-            opacity: 1,
-            duration: 1,
-            ease: "power2.out",
-            delay: 6,
-          }
-        );
-      }
-    }, 500);
+    const timer = setTimeout(() => {
+      setAnimate(true);
+      setIsVisible(true);
+      animateShapes();
+      animateText();
+      animateGlobe();
+      animateBottomElements();
+    }, ANIMATION_DELAYS.initial);
 
     return () => clearTimeout(timer);
   }, []);
@@ -227,9 +210,9 @@ const HeroText = () => {
             >
               <path
                 d="M16 4L28 24H4L16 4Z"
-                fill={burgundy}
+                fill={COLORS.burgundy}
                 rx="2"
-                stroke={burgundy}
+                stroke={COLORS.burgundy}
                 strokeWidth="2"
                 strokeLinejoin="round"
               />
@@ -263,7 +246,14 @@ const HeroText = () => {
               viewBox="0 0 32 32"
               style={{ opacity: 0 }}
             >
-              <rect x="4" y="4" width="24" height="24" rx="6" fill={olive} />
+              <rect
+                x="4"
+                y="4"
+                width="24"
+                height="24"
+                rx="6"
+                fill={COLORS.olive}
+              />
             </svg>
           </span>
           <br />
@@ -288,7 +278,7 @@ const HeroText = () => {
               viewBox="0 0 32 32"
               style={{ opacity: 0 }}
             >
-              <circle cx="16" cy="16" r="16" fill={ochre} />
+              <circle cx="16" cy="16" r="16" fill={COLORS.ochre} />
             </svg>
             <span
               ref={(el) => {

@@ -8,10 +8,11 @@ import GridLinks from "./components/GridLinks";
 import { Revealer } from "./components/Revealer";
 import Footer from "./components/Footer";
 import Substack from "./components/Substack";
+import type { FC } from "react";
 
-export default function Home() {
+const Home: FC = () => {
   return (
-    <div className="relative w-full home">
+    <main className="relative w-full home">
       <Loader />
       <Revealer />
 
@@ -19,10 +20,16 @@ export default function Home() {
         <Navbar />
         <HeroText />
       </div>
-      <AboutMe />
-      <Substack />
-      <GridLinks />
+
+      <section className="content-sections">
+        <AboutMe />
+        <Substack />
+        <GridLinks />
+      </section>
+
       <Footer />
-    </div>
+    </main>
   );
-}
+};
+
+export default Home;
