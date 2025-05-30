@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     description: "Yo Shrit here! building cool stuff on the go wohoo",
     images: [
       {
-        url: "https://www.shrit.in/og.png",
+        url: "https://www.shrit.in/opengraph-image.png.png",
         width: 1200,
         height: 630,
         alt: "Shrit making cool stuff",
@@ -35,7 +35,7 @@ export const metadata: Metadata = {
     description: "Yo Shrit here! building cool stuff on the go wohoo",
     images: [
       {
-        url: "https://www.shrit.in/og.png",
+        url: "https://www.shrit.in/opengraph-image.png.png",
         alt: "Shrit making cool stuff",
       },
     ],
