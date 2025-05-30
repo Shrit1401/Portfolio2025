@@ -70,7 +70,7 @@ export default function TagPage() {
           <div className="absolute inset-[42%] bg-gray-500 rounded-full animate-pulse"></div>
         </div>
         <div className="mt-8 text-gray-400 text-lg font-light tracking-wider animate-pulse">
-          Loading thoughts...
+          Loading thoughts..
         </div>
       </div>
     );
