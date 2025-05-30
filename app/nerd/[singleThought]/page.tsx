@@ -3,16 +3,16 @@ import { getResearchFromSlug } from "@/app/lib/server";
 import { urlFor } from "@/sanity/lib/image";
 import ResearchPageClient from "./ResearchPageClient";
 
-type Params = Promise<{
+type Params = {
   singleThought: string;
-}>;
+};
 
 export async function generateMetadata({
   params,
 }: {
   params: Params;
 }): Promise<Metadata> {
-  const { singleThought } = await params;
+  const { singleThought } = params;
   const research = await getResearchFromSlug(singleThought);
 
   if (!research || research.length === 0) {
@@ -57,7 +57,7 @@ type Props = {
 };
 
 export default async function ResearchPage({ params }: Props) {
-  const { singleThought } = await params;
+  const { singleThought } = params;
   const research = await getResearchFromSlug(singleThought);
 
   if (!research || research.length === 0) {
