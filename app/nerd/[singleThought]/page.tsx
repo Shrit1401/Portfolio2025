@@ -46,11 +46,12 @@ export async function generateMetadata({
   };
 }
 
-export default async function ResearchPage({
-  params,
-}: {
+type Props = {
   params: { singleThought: string };
-}) {
+  searchParams: { [key: string]: string | string[] | undefined };
+};
+
+export default async function ResearchPage({ params }: Props) {
   const research = await getResearchFromSlug(params.singleThought);
 
   if (!research || research.length === 0) {
