@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import { getResearchFromSlug } from "@/app/lib/server";
 import { urlFor } from "@/sanity/lib/image";
 import ResearchPageClient from "./ResearchPageClient";
-type Params = Promise<any>;
+type Params = Promise<{ singleThought: string }>;
 
 export async function generateMetadata({
   params,
@@ -48,12 +48,7 @@ export async function generateMetadata({
   };
 }
 
-type Props = {
-  params: Params;
-  searchParams: { [key: string]: string | string[] | undefined };
-};
-
-export default async function ResearchPage({ params }: Props) {
+export default async function ResearchPage({ params }: { params: Params }) {
   const { singleThought } = await params;
   const research = await getResearchFromSlug(singleThought);
 
