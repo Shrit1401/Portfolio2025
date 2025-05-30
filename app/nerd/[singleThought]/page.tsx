@@ -2,9 +2,7 @@ import { Metadata } from "next";
 import { getResearchFromSlug } from "@/app/lib/server";
 import { urlFor } from "@/sanity/lib/image";
 import ResearchPageClient from "./ResearchPageClient";
-type Params = Promise<{
-  singleThought: string;
-}>;
+type Params = Promise<any>;
 
 export async function generateMetadata({
   params,
