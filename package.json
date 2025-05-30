@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@formspark/use-formspark": "^0.1.42",
     "@gsap/react": "^2.1.2",
     "@markdoc/markdoc": "^0.5.2",
     "@react-three/drei": "^10.0.8",
