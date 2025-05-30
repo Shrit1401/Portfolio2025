@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
 
+const baseUrl =
+  process.env.NEXT_PUBLIC_BASE_URL || "https://portfolio2025-gules.vercel.app";
+
 export const metadata: Metadata = {
-  metadataBase: new URL("https://www.shrit.in"),
-  title: "shrit",
+  metadataBase: new URL(baseUrl),
+  title: "Shrit",
   description: "Yo Shrit here! building cool stuff on the go wohoo",
   icons: {
     icon: [
@@ -15,14 +18,14 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://www.shrit.in",
+    url: baseUrl,
     title: "Shrit",
     description: "Yo Shrit here! building cool stuff on the go wohoo",
     images: [
       {
-        url: "https://www.shrit.in/opengraph-image.png.png",
+        url: "https://opengraph.b-cdn.net/production/images/5cee1368-220e-49f0-9e40-77a4441cdac4.png?token=eB4AYWeqak2MgfGZ9JksIA1z7_grB4tK5txx4Her2MM&height=634&width=1200&expires=33284633273",
         width: 1200,
-        height: 630,
+        height: 634,
         alt: "Shrit making cool stuff",
         type: "image/png",
       },
@@ -31,11 +34,11 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     site: "@shrit1401",
-    title: "shrit",
+    title: "Shrit",
     description: "Yo Shrit here! building cool stuff on the go wohoo",
     images: [
       {
-        url: "https://www.shrit.in/opengraph-image.png.png",
+        url: "https://opengraph.b-cdn.net/production/images/5cee1368-220e-49f0-9e40-77a4441cdac4.png?token=eB4AYWeqak2MgfGZ9JksIA1z7_grB4tK5txx4Her2MM&height=634&width=1200&expires=33284633273",
         alt: "Shrit making cool stuff",
       },
     ],
@@ -51,10 +54,7 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
-  verification: {
-    google: "your-google-site-verification", // Add your Google verification code
-  },
   alternates: {
-    canonical: "https://www.shrit.in",
+    canonical: baseUrl,
   },
 };
