@@ -19,6 +19,7 @@ import "katex/dist/katex.min.css";
 import { getResearchFromSlug } from "@/app/lib/server";
 import { Research } from "@/app/lib/types";
 import { urlFor } from "@/sanity/lib/image";
+import Link from "next/link";
 
 type CalloutType = "note" | "warning" | "tip";
 
@@ -100,6 +101,19 @@ export default function ResearchPage() {
       </div>
       <main className="flex-grow container mx-auto px-4 py-8">
         <article className="prose lg:prose-xl mx-auto prose-pre:bg-transparent prose-pre:m-0 prose-pre:p-0 prose-headings:scroll-mt-20">
+          {research.tags && research.tags.length > 0 && (
+            <div className="flex flex-wrap gap-2 mb-8">
+              {research.tags.map((tag) => (
+                <Link
+                  key={tag.slug.current}
+                  href={`/nerd/tag/${tag.slug.current}`}
+                  className="inline-block px-3 py-1 text-sm bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-full transition-colors duration-200"
+                >
+                  {tag.name}
+                </Link>
+              ))}
+            </div>
+          )}
           <ReactMarkdown
             remarkPlugins={[remarkGfm, remarkMath]}
             rehypePlugins={[

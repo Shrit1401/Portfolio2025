@@ -7,7 +7,13 @@ export async function getResearchs() {
   noStore();
   try {
     const data = await client.fetch(
-      `*[_type == "research"] | order(date desc)`
+      `*[_type == "research"] | order(date desc) {
+        ...,
+        "tags": tags[]-> {
+          name,
+          "slug": slug
+        }
+      }`
     );
 
     return data;
@@ -20,7 +26,13 @@ export async function getResearchFromSlug(slug: string) {
   noStore();
   try {
     const data = await client.fetch(
-      `*[_type == "research" && slug.current == "${slug}"]`
+      `*[_type == "research" && slug.current == "${slug}"] {
+        ...,
+        "tags": tags[]-> {
+          name,
+          "slug": slug
+        }
+      }`
     );
 
     return data;

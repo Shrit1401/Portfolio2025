@@ -1,16 +1,21 @@
 "use client";
 import Link from "next/link";
 import { motion } from "framer-motion";
-
 import { useTransitionRouter } from "next-view-transitions";
 import { usePathname } from "next/navigation";
-import { useEffect } from "react";
+
 interface ResearchCardProps {
   title: string;
   slug: string;
   preview: string;
   date: string;
   image: string;
+  tags?: Array<{
+    name: string;
+    slug: {
+      current: string;
+    };
+  }>;
 }
 
 export default function ResearchCard({
@@ -19,27 +24,10 @@ export default function ResearchCard({
   preview,
   date,
   image,
+  tags,
 }: ResearchCardProps) {
   const router = useTransitionRouter();
   const pathname = usePathname();
-
-  function triggerPageTransition() {
-    document.documentElement.animate(
-      [
-        {
-          clipPath: "polygon(25% 75%, 75% 75%, 75% 75%, 25% 75%)",
-        },
-        {
-          clipPath: "polygon(0 100%, 100% 100%, 100% 0,0 0)",
-        },
-      ],
-      {
-        duration: 2000,
-        easing: "cubic-bezier(0.9, 0, 0.1, 1)",
-        pseudoElement: "::view-transition-new(root)",
-      }
-    );
-  }
 
   const handleNavigation =
     (path: string) => (e: React.MouseEvent<HTMLAnchorElement>) => {
@@ -47,75 +35,60 @@ export default function ResearchCard({
         e.preventDefault();
         return;
       }
-      router.push(path, {
-        onTransitionReady: triggerPageTransition,
-      });
+      router.push(path);
     };
 
-  useEffect(() => {
-    const logo = document.querySelector(".logo");
-    if (logo) {
-      logo.addEventListener("mouseenter", () => {
-        gsap.to(logo, { scale: 1.2, duration: 0.3, ease: "bounce.out" });
-      });
-      logo.addEventListener("mouseleave", () => {
-        gsap.to(logo, { scale: 1, duration: 0.3, ease: "bounce.out" });
-      });
-    }
-  }, []);
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
       onClick={(e) =>
         handleNavigation(`/nerd/${slug}`)(
           e as unknown as React.MouseEvent<HTMLAnchorElement>
         )
       }
-      whileHover={{
-        scale: 1.01,
-        transition: { duration: 0.2 },
-      }}
-      className="cursor-pointer"
+      className="cursor-pointer group relative"
+      whileHover={{ y: -8 }}
+      transition={{ duration: 0.2, ease: "easeOut" }}
     >
-      <motion.div
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ delay: 0.1 }}
-        className="relative w-full aspect-[16/9] overflow-hidden"
-      >
-        <motion.img
+      <div className="relative w-full aspect-[16/9] overflow-hidden mb-4 rounded-lg">
+        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-300 z-10" />
+        <img
           src={image}
           alt={title}
-          className="w-full h-full object-cover"
-          whileHover={{ scale: 1.05 }}
-          transition={{ duration: 0.3 }}
+          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
         />
-      </motion.div>
+      </div>
 
-      <motion.h1
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2 }}
-        className="text-2xl font-bold"
-      >
+      <h2 className="text-xl font-medium mb-2 group-hover:text-gray-600 transition-colors duration-300">
         {title}
-      </motion.h1>
-      <motion.p
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.3 }}
-        className="text-gray-600"
-      >
-        {preview}
+      </h2>
 
-        <span className="text-xs md:text-sm mx-2 text-gray-500">•</span>
+      <div className="flex items-center text-sm text-gray-500">
+        <p className="line-clamp-2 group-hover:text-gray-600 transition-colors duration-300">
+          {preview}
+        </p>
+        <span className="mx-2">•</span>
+        <time className="group-hover:text-gray-600 transition-colors duration-300">
+          {new Date(date).toLocaleDateString("en-US", {
+            month: "short",
+            day: "numeric",
+          })}
+        </time>
+      </div>
 
-        {new Date(date).toLocaleDateString("en-US", {
-          month: "short",
-          day: "numeric",
-        })}
-      </motion.p>
+      {tags && tags.length > 0 && (
+        <div className="flex flex-wrap gap-2 mt-3">
+          {tags.map((tag) => (
+            <span
+              key={tag.slug.current}
+              className="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded-full"
+            >
+              {tag.name}
+            </span>
+          ))}
+        </div>
+      )}
     </motion.div>
   );
 }

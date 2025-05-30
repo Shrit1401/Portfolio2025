@@ -44,6 +44,13 @@ export const research = defineType({
       ],
     }),
     defineField({
+      name: "tags",
+      type: "array",
+      of: [{ type: "reference", to: [{ type: "tag" }] }],
+      description: "Add tags to categorize this research",
+      validation: (Rule) => Rule.unique(),
+    }),
+    defineField({
       name: "markdown",
       type: "markdown",
       validation: (Rule) => Rule.required(),

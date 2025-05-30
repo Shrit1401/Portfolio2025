@@ -39,6 +39,7 @@ export default function ResearchGrid({ research }: ResearchGridProps) {
             preview={item.description}
             date={item.date}
             image={urlFor(item.image).url()}
+            tags={item.tags}
           />
         </motion.div>
       ))}

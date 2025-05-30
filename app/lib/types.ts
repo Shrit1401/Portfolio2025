@@ -4,6 +4,12 @@ export interface Research {
   date: string;
   image: string;
   markdown: string;
+  tags?: Array<{
+    name: string;
+    slug: {
+      current: string;
+    };
+  }>;
   slug: {
     current: string;
   };

@@ -79,7 +79,7 @@ const Substack = () => {
     <div className="w-full flex justify-center py-10">
       <div className="w-full max-w-4xl px-4 z-20">
         <h2 className="text-3xl md:text-5xl font-bold text-neutral-900 mb-10 tracking-tight text-left w-full">
-          Latest Posts
+          Recent Letters
         </h2>
         <div ref={listRef} className="flex flex-col gap-10 md:gap-14 w-full">
           {displayedItems.map((item, idx) => {

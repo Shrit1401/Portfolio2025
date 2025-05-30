@@ -1,0 +1,70 @@
+import { MetadataRoute } from "next";
+import { client } from "@/sanity/lib/client";
+import { groq } from "next-sanity";
+
+// Query to get all your published content from Sanity
+const query = groq`*[_type in ["research", "work", "past"] && defined(slug.current)] {
+  "slug": slug.current,
+  _updatedAt,
+  _type
+}`;
+
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://www.shrit.in";
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const content = await client.fetch(query);
+
+  // Static routes
+  const staticRoutes = [
+    {
+      url: baseUrl,
+      lastModified: new Date(),
+      changeFrequency: "daily",
+      priority: 1,
+    },
+    {
+      url: `${baseUrl}/work`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/nerd`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/past`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.8,
+    },
+  ];
+
+  // Dynamic routes from Sanity content
+  const dynamicRoutes = content.map((item: any) => {
+    // Determine the base path based on content type
+    let basePath = "";
+    switch (item._type) {
+      case "research":
+        basePath = "nerd";
+        break;
+      case "work":
+        basePath = "work";
+        break;
+      case "past":
+        basePath = "past";
+        break;
+    }
+
+    return {
+      url: `${baseUrl}/${basePath}/${item.slug}`,
+      lastModified: new Date(item._updatedAt),
+      changeFrequency: "weekly",
+      priority: 0.7,
+    };
+  });
+
+  return [...staticRoutes, ...dynamicRoutes];
+}
