@@ -67,7 +67,7 @@ export default function Loader() {
       progressRef.current,
       {
         scaleX: 1,
-        duration: 5,
+        duration: 4,
         ease: "power2.inOut",
       },
       "-=0.6"
@@ -75,7 +75,7 @@ export default function Loader() {
 
     // Cycling through funny texts with equal timing
     let textIndex = 0;
-    const totalDuration = 5000; // 5 seconds total
+    const totalDuration = 4000; // 4 seconds total
     const timePerText = totalDuration / funnyTexts.length;
 
     const textInterval = setInterval(() => {
@@ -101,9 +101,9 @@ export default function Loader() {
     tl.to(imgRefs.current, {
       y: 0,
       opacity: 1,
-      duration: 2,
+      duration: 1.5,
       ease: "power3.inOut",
-      stagger: 0.08,
+      stagger: 0.06,
     })
       .to(
         loaderImgsRef.current,
@@ -111,52 +111,52 @@ export default function Loader() {
           x: 0,
           y: 0,
           opacity: 1,
-          duration: 3.5,
+          duration: 2.5,
           ease: "power3.inOut",
         },
-        "-=2.2"
+        "-=1.5"
       )
       .to(
         imgRefs.current.filter((_, i) => i !== 3), // Skip the logo image
         {
           clipPath: "polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)",
-          duration: 1.2,
-          stagger: 0.13,
+          duration: 1,
+          stagger: 0.1,
           ease: "power3.inOut",
         },
-        "-=1.2"
+        "-=1"
       )
       .to(
         textRef.current,
         {
           opacity: 0,
           y: -20,
-          duration: 0.8,
+          duration: 0.6,
           ease: "power2.in",
         },
-        "-=0.5"
+        "-=0.4"
       )
       .to(
         [progressRef.current],
         {
           opacity: 0,
           y: 20,
-          duration: 0.8,
+          duration: 0.6,
           ease: "power2.in",
         },
-        "-=0.8"
+        "-=0.6"
       )
       .to(
         loaderRef.current,
         {
           clipPath: "polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)",
-          duration: 1.2,
+          duration: 1,
           ease: "power3.inOut",
           onComplete: () => {
             clearInterval(textInterval);
           },
         },
-        "-=0.5"
+        "-=0.4"
       );
   }, []);
 
