@@ -14,21 +14,34 @@ const Newsletter: React.FC<NewsletterProps> = ({ className = "" }) => {
   });
 
   const [confirm, setConfirm] = useState("");
+  const [error, setError] = useState("");
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setConfirm("");
+    setError("");
+
+    if (!email.trim()) {
+      setError("Please enter your email address");
+      return;
+    }
+
+    if (!email.includes("@") || !email.includes(".")) {
+      setError("Please enter a valid email address");
+      return;
+    }
 
     try {
       const response = await submit({ email });
 
       if (response) {
         setConfirm("You're in! 🎉");
+        setEmail("");
       } else {
-        setConfirm("Something went wrong.");
+        setError("Something went wrong. Please try again.");
       }
     } catch (error) {
-      setConfirm("Something went wrong.");
+      setError("Something went wrong. Please try again.");
     }
   };
 
@@ -37,13 +50,22 @@ const Newsletter: React.FC<NewsletterProps> = ({ className = "" }) => {
       onSubmit={handleSubmit}
       className={`flex flex-col md:flex-row items-center gap-3 relative group ${className}`}
     >
-      <input
-        type="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        placeholder="Join my cool newsletter..."
-        className="px-6 py-3 w-full md:w-80 border-2 border-gray-300 rounded-full focus:outline-none focus:border-[#37517b] transition-all duration-300 text-gray-800 placeholder-gray-400 shadow-sm hover:shadow-md focus:shadow-lg"
-      />
+      <div className="w-full md:w-80 relative">
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Join my cool newsletter..."
+          className={`px-6 py-3 w-full border-2 rounded-full focus:outline-none transition-all duration-300 text-gray-800 placeholder-gray-400 shadow-sm hover:shadow-md focus:shadow-lg ${
+            error ? "border-red-500" : "border-gray-300 focus:border-[#37517b]"
+          }`}
+        />
+        {error && (
+          <div className="absolute -bottom-6 left-0 text-sm text-red-500 animate-fade-in">
+            {error}
+          </div>
+        )}
+      </div>
       <button
         className="px-8 py-3 w-full md:w-auto bg-[#37517b] text-white rounded-full hover:bg-[#6B46C1] transition-all duration-300 font-medium shadow-sm hover:shadow-md active:scale-95 relative overflow-hidden group-hover:translate-x-1 disabled:opacity-80 disabled:cursor-not-allowed"
         type="submit"
