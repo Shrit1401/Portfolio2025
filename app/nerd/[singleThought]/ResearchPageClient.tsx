@@ -36,6 +36,7 @@ export default function ResearchPageClient({
   research,
 }: ResearchPageClientProps) {
   const readingTime = getReadingTime(research.markdown || "");
+  const hasTags = Array.isArray(research.tags) && research.tags.length > 0;
 
   return (
     <div className="relative w-full home">
@@ -53,7 +54,7 @@ export default function ResearchPageClient({
 
       <main className="flex-grow container mx-auto px-4 py-8">
         <article className="prose lg:prose-xl mx-auto prose-pre:bg-transparent prose-pre:m-0 prose-pre:p-0 prose-headings:scroll-mt-20">
-          {research.tags?.length > 0 && (
+          {hasTags && (
             <div className="flex flex-wrap gap-2 mb-8">
               {research.tags.map((tag) => (
                 <Link
