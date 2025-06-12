@@ -25,9 +25,18 @@ interface ResearchPageClientProps {
   research: Research;
 }
 
+function getReadingTime(markdown: string): string {
+  const wordsPerMinute = 200;
+  const words = markdown.trim().split(/\s+/).length;
+  const minutes = Math.ceil(words / wordsPerMinute);
+  return `${minutes} min read`;
+}
+
 export default function ResearchPageClient({
   research,
 }: ResearchPageClientProps) {
+  const readingTime = getReadingTime(research.markdown || "");
+
   return (
     <div className="relative w-full home">
       <Revealer />
@@ -36,14 +45,15 @@ export default function ResearchPageClient({
         <Navbar />
         <ResearchText
           title={research.title || "Untitled"}
-          time={"5min read"}
+          time={readingTime}
           date={research.date || new Date().toISOString().split("T")[0]}
           img={urlFor(research.image).url()}
         />
       </div>
+
       <main className="flex-grow container mx-auto px-4 py-8">
         <article className="prose lg:prose-xl mx-auto prose-pre:bg-transparent prose-pre:m-0 prose-pre:p-0 prose-headings:scroll-mt-20">
-          {research.tags && research.tags.length > 0 && (
+          {research.tags?.length > 0 && (
             <div className="flex flex-wrap gap-2 mb-8">
               {research.tags.map((tag) => (
                 <Link
@@ -56,6 +66,7 @@ export default function ResearchPageClient({
               ))}
             </div>
           )}
+
           <ReactMarkdown
             remarkPlugins={[remarkGfm, remarkMath]}
             rehypePlugins={[
@@ -65,12 +76,12 @@ export default function ResearchPageClient({
               rehypeKatex,
             ]}
             components={{
-              // Style callouts
               blockquote: ({ children, ...props }) => {
                 const content = React.Children.toArray(children);
                 const firstChild = content[0] as ReactElement<{
                   children: string;
                 }>;
+
                 if (
                   React.isValidElement(firstChild) &&
                   typeof firstChild.props.children === "string" &&
@@ -79,6 +90,7 @@ export default function ResearchPageClient({
                   const type = firstChild.props.children.match(
                     /\[!(.*?)\]/
                   )?.[1] as CalloutType;
+
                   const message = firstChild.props.children
                     .replace(/\[!.*?\]/, "")
                     .trim();
@@ -101,6 +113,7 @@ export default function ResearchPageClient({
                     </div>
                   );
                 }
+
                 return (
                   <blockquote
                     className="border-l-4 border-gray-300 pl-4 italic"
@@ -110,7 +123,7 @@ export default function ResearchPageClient({
                   </blockquote>
                 );
               },
-              // Make all links open in new tab
+
               a: ({ href, children, ...props }) => (
                 <a
                   href={href}
@@ -122,7 +135,7 @@ export default function ResearchPageClient({
                   {children}
                 </a>
               ),
-              // Style code blocks
+
               code: ({ className, children, ...props }) => {
                 const match = /language-(\w+)/.exec(className || "");
                 return match ? (
@@ -144,7 +157,7 @@ export default function ResearchPageClient({
                   </code>
                 );
               },
-              // Style task lists
+
               input: ({ type, checked, ...props }) => {
                 if (type === "checkbox") {
                   return (
@@ -159,7 +172,7 @@ export default function ResearchPageClient({
                 }
                 return <input type={type} {...props} />;
               },
-              // Style footnotes
+
               sup: ({ children, ...props }) => {
                 if (typeof children === "string") {
                   const id = children.match(/\[(.*?)\]/)?.[1];
@@ -186,7 +199,6 @@ export default function ResearchPageClient({
       </main>
 
       <ResearchSense />
-
       <Footer />
     </div>
   );
