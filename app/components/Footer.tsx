@@ -78,10 +78,10 @@ const Footer = () => {
           <p className="text-center text-gray-300">
             Oh, if you wanna connect, send me a mail at{" "}
             <a
-              href="mailto:shrit@forgezone.dev"
+              href="mailto:shrit1401@gmail.com"
               className="text-white underline hover:text-gray-300 transition-colors duration-300"
             >
-              shrit@forgezone.dev
+              shrit1401@gmail.com
             </a>{" "}
             or DM me on socials!
           </p>

@@ -20,12 +20,7 @@ type MenuItem = {
 // Constants
 const MENU_ITEMS: MenuItem[] = [
   { label: "Home", path: "/" },
-  {
-    label: "YT",
-    path: "",
-    isExternal: true,
-    externalUrl: "https://www.youtube.com/@shippingshrit",
-  },
+
   {
     label: "newsletter",
     path: "",

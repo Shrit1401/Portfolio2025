@@ -4,7 +4,6 @@ import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
 import { Revealer } from "../components/Revealer";
 import WorkInfo from "../components/WorkInfo";
-import WorkTell from "../components/WorkTell";
 import WorkText from "../components/WorkText";
 
 export default function Work() {
@@ -16,7 +15,6 @@ export default function Work() {
         <Navbar active="work" />
         <WorkText />
       </div>
-      <WorkTell />
       <WorkInfo />
 
       <Footer />

@@ -28,13 +28,13 @@ interface RootLayoutProps {
 const RootLayout: FC<RootLayoutProps> = ({ children }) => {
   return (
     <ViewTransitions>
-      <head>
+      {/* <head>
         <script
           defer
           src="https://cloud.umami.is/script.js"
           data-website-id="369e35b2-80fb-48ed-a840-9a68246a3c68"
         ></script>
-      </head>
+      </head> */}
       <html lang="en" className={`${dmSans.variable} ${ebGaramond.variable}`}>
         <body className="font-sans antialiased">
           <SmoothScroll>{children}</SmoothScroll>
