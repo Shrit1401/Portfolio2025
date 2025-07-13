@@ -44,8 +44,8 @@ export default function Loader() {
       {
         scale: 1,
         opacity: 1,
-        duration: 0.8,
-        stagger: 0.1,
+        duration: 0.3,
+        stagger: 0.05,
         ease: "back.out(1.7)",
       }
     );
@@ -56,10 +56,10 @@ export default function Loader() {
       {
         opacity: 1,
         y: 0,
-        duration: 1,
+        duration: 0.4,
         ease: "power2.out",
       },
-      "-=0.4"
+      "-=0.2"
     );
 
     // Progress bar animation with enhanced timing
@@ -67,15 +67,15 @@ export default function Loader() {
       progressRef.current,
       {
         scaleX: 1,
-        duration: 4,
+        duration: 1.5,
         ease: "power2.inOut",
       },
-      "-=0.6"
+      "-=0.3"
     );
 
     // Cycling through funny texts with equal timing
     let textIndex = 0;
-    const totalDuration = 4000; // 4 seconds total
+    const totalDuration = 1500; // 1.5 seconds total
     const timePerText = totalDuration / funnyTexts.length;
 
     const textInterval = setInterval(() => {
@@ -85,14 +85,14 @@ export default function Loader() {
       // Text change animation
       gsap.to(textRef.current, {
         scale: 1.05,
-        duration: 0.2,
+        duration: 0.1,
         yoyo: true,
         repeat: 1,
         ease: "power2.inOut",
       });
     }, timePerText);
 
-    const tl = gsap.timeline({ delay: 1 });
+    const tl = gsap.timeline({ delay: 0.3 });
 
     // Check if mobile screen
     const isMobile = window.innerWidth <= 768;
@@ -101,9 +101,9 @@ export default function Loader() {
     tl.to(imgRefs.current, {
       y: 0,
       opacity: 1,
-      duration: 1.5,
+      duration: 0.6,
       ease: "power3.inOut",
-      stagger: 0.06,
+      stagger: 0.03,
     })
       .to(
         loaderImgsRef.current,
@@ -111,52 +111,52 @@ export default function Loader() {
           x: 0,
           y: 0,
           opacity: 1,
-          duration: 2.5,
+          duration: 1,
           ease: "power3.inOut",
         },
-        "-=1.5"
+        "-=0.6"
       )
       .to(
         imgRefs.current.filter((_, i) => i !== 3), // Skip the logo image
         {
           clipPath: "polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)",
-          duration: 1,
-          stagger: 0.1,
+          duration: 0.4,
+          stagger: 0.05,
           ease: "power3.inOut",
         },
-        "-=1"
+        "-=0.4"
       )
       .to(
         textRef.current,
         {
           opacity: 0,
           y: -20,
-          duration: 0.6,
+          duration: 0.3,
           ease: "power2.in",
         },
-        "-=0.4"
+        "-=0.2"
       )
       .to(
         [progressRef.current],
         {
           opacity: 0,
           y: 20,
-          duration: 0.6,
+          duration: 0.3,
           ease: "power2.in",
         },
-        "-=0.6"
+        "-=0.3"
       )
       .to(
         loaderRef.current,
         {
           clipPath: "polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)",
-          duration: 1,
+          duration: 0.4,
           ease: "power3.inOut",
           onComplete: () => {
             clearInterval(textInterval);
           },
         },
-        "-=0.4"
+        "-=0.2"
       );
   }, []);
 

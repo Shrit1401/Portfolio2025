@@ -132,10 +132,10 @@ const ExplosionContainer = () => {
 
   const config = {
     gravity: 0.1,
-    friction: 0.995,
-    imageSize: 200,
-    horizontalForce: 10,
-    verticalForce: 8,
+    friction: 0.99,
+    imageSize: 300,
+    horizontalForce: 5,
+    verticalForce: 5,
     rotationSpeed: 5,
     resetDelay: 500,
   };

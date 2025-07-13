@@ -34,15 +34,15 @@ const MENU_ITEMS: MenuItem[] = [
 
 const ANIMATION_CONFIG = {
   pageTransition: {
-    duration: 2000,
+    duration: 800,
     easing: "cubic-bezier(0.9, 0, 0.1, 1)",
   },
   menu: {
-    duration: 0.5,
-    stagger: 0.1,
+    duration: 0.3,
+    stagger: 0.05,
   },
   hover: {
-    duration: 0.3,
+    duration: 0.2,
   },
 } as const;
 

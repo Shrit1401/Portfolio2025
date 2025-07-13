@@ -44,7 +44,7 @@ const WorkInfo = () => {
                   className="flex items-center justify-center w-full mb-6"
                   style={{
                     background: "#D9D9D9",
-                    borderRadius: "2.5rem",
+                    borderRadius: "1.2rem",
                     width: "100%",
                     height: "320px",
                     maxWidth: "100%",
@@ -61,7 +61,7 @@ const WorkInfo = () => {
                         width: "100%",
                         height: "100%",
                         objectFit: "cover",
-                        borderRadius: "2.2rem",
+                        borderRadius: "1.2rem",
                       }}
                     />
                   ) : (
@@ -84,6 +84,11 @@ const WorkInfo = () => {
                   <span className="text-3xl font-bold text-neutral-400">
                     {project.year}
                   </span>
+                </div>
+                <div className="flex flex-col gap-2">
+                  <p className="text-lg text-neutral-900">
+                    {project.description}
+                  </p>
                 </div>
                 {/* Links */}
                 <div className="flex flex-col gap-2 mt-2">

@@ -13,14 +13,14 @@ const COLORS = {
 } as const;
 
 const ANIMATION_DELAYS = {
-  initial: 400,
-  shapes: 4,
-  text: 4.5,
-  globe: 4,
-  bottom: 4.5,
-  dontClick: 4.7,
-  scrollDown: 4.9,
-  newsletter: 5,
+  initial: 200,
+  shapes: 1.5,
+  text: 1.8,
+  globe: 1.5,
+  bottom: 1.8,
+  dontClick: 2,
+  scrollDown: 2.1,
+  newsletter: 2.2,
 } as const;
 
 const TimeDisplay: FC = () => {
@@ -68,20 +68,20 @@ const HeroText: FC = () => {
           {
             scale: 1,
             opacity: 1,
-            duration: 0.8,
+            duration: 0.4,
             ease: "power2.out",
-            delay: ANIMATION_DELAYS.shapes + 0.5 + index * 0.2,
+            delay: ANIMATION_DELAYS.shapes + 0.2 + index * 0.1,
           }
         );
 
         // Continuous rotation
         gsap.to(shape, {
           rotation: 360,
-          duration: 20 + index * 5,
+          duration: 10 + index * 2,
           repeat: -1,
           ease: "none",
           transformOrigin: "center center",
-          delay: ANIMATION_DELAYS.shapes + index * 2,
+          delay: ANIMATION_DELAYS.shapes + index * 0.5,
         });
 
         // Color transition
@@ -94,11 +94,11 @@ const HeroText: FC = () => {
         gsap.to(shape, {
           fill: colors[1],
           stroke: colors[1],
-          duration: 3,
+          duration: 1.5,
           repeat: -1,
           yoyo: true,
           ease: "power1.inOut",
-          delay: ANIMATION_DELAYS.shapes + index * 1.5,
+          delay: ANIMATION_DELAYS.shapes + index * 0.5,
         });
       });
     };
@@ -112,9 +112,9 @@ const HeroText: FC = () => {
           {
             y: 0,
             opacity: 1,
-            duration: 1.1,
+            duration: 0.6,
             ease: "power2.out",
-            delay: ANIMATION_DELAYS.text + index * 0.18,
+            delay: ANIMATION_DELAYS.text + index * 0.1,
           }
         );
       });
@@ -124,7 +124,7 @@ const HeroText: FC = () => {
       if (!globeRef.current) return;
       gsap.to(globeRef.current, {
         rotation: 360,
-        duration: 8,
+        duration: 4,
         repeat: -1,
         ease: "none",
         transformOrigin: "center center",
@@ -148,7 +148,7 @@ const HeroText: FC = () => {
           {
             y: 0,
             opacity: 1,
-            duration: 1,
+            duration: 0.5,
             ease: "power2.out",
             delay,
           }

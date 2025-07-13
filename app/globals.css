@@ -79,6 +79,7 @@ pre {
   transform: translateX(-50%);
   will-change: transform;
   object-fit: cover;
+  border-radius: 12px;
 }
 
 .sticky img {
