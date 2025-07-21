@@ -2,7 +2,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { motion, useAnimation, useInView } from "framer-motion";
 import Newsletter from "./Newsletter";
-import { FaGithub, FaHeart, FaTwitter, FaYoutube } from "react-icons/fa";
+import { FaGithub, FaTwitter, FaLinkedinIn } from "react-icons/fa";
 import Link from "next/link";
 import { useTransitionRouter } from "next-view-transitions";
 import { usePathname } from "next/navigation";
@@ -66,12 +66,12 @@ const Footer = () => {
               <FaTwitter />
             </Link>
             <Link
-              href="https://www.youtube.com/@shippingshrit"
+              href="https://www.linkedin.com/in/shrit1401/"
               target="_blank"
               rel="noopener noreferrer"
               className="text-2xl hover:text-[#37517b] transition-colors duration-300"
             >
-              <FaYoutube />
+              <FaLinkedinIn />
             </Link>
           </div>
 
@@ -88,20 +88,20 @@ const Footer = () => {
 
           <nav className="flex gap-8 items-center">
             <span
-              onClick={handleNavigation("/nerd")}
-              className="hover:text-[#37517b] transition-colors duration-300"
+              onClick={handleNavigation("/thoughts")}
+              className="hover:text-[#37517b] transition-colors cursor-pointer duration-300"
             >
-              Nerd
+              Thoughts
             </span>
             <span
               onClick={handleNavigation("/work")}
-              className="hover:text-[#37517b] transition-colors duration-300"
+              className="hover:text-[#37517b] transition-colors cursor-pointer duration-300"
             >
               Work
             </span>
             <span
               onClick={handleNavigation("/past")}
-              className="hover:text-[#37517b] transition-colors duration-300"
+              className="hover:text-[#37517b] transition-colors cursor-pointer duration-300"
             >
               Past
             </span>

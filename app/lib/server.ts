@@ -90,10 +90,7 @@ export async function getPastEvents() {
   noStore();
   try {
     const data = await client.fetch(`*[_type == "past"]`);
-    data.sort(
-      (a: { _createdAt: string }, b: { _createdAt: string }) =>
-        new Date(b._createdAt).getTime() - new Date(a._createdAt).getTime()
-    );
+    data.reverse();
     return data;
   } catch (error) {
     console.error(error);

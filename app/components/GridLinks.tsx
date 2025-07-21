@@ -17,16 +17,16 @@ const links = [
     align: "right",
   },
   {
-    href: "https://youtube.com/@shritshrivastava",
+    href: "https://x.com/Shrit1401",
     img: "/wayout/yt.png",
-    label: "\u2190 YT", // ← YT
+    label: "\u2190 Twitter", // ← YT
     align: "left",
     external: true,
   },
   {
-    href: "/nerd",
+    href: "/thoughts",
     img: "/wayout/work.png",
-    label: "Nerd Research \u2192", // Nerd →
+    label: "Thoughts \u2192", // Nerd →
     align: "right",
   },
 ];
