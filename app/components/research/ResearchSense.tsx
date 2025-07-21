@@ -87,7 +87,7 @@ const ResearchSense = () => {
 
   const backward = adjacentResearch.previous
     ? {
-        href: `/nerd/${adjacentResearch.previous.slug}`,
+        href: `/thoughts/${adjacentResearch.previous.slug}`,
         img: urlFor(adjacentResearch.previous.image).url(),
         label: `← ${adjacentResearch.previous.title}`,
       }
@@ -95,7 +95,7 @@ const ResearchSense = () => {
 
   const forward = adjacentResearch.next
     ? {
-        href: `/nerd/${adjacentResearch.next.slug}`,
+        href: `/thoughts/${adjacentResearch.next.slug}`,
         img: urlFor(adjacentResearch.next.image).url(),
         label: `${adjacentResearch.next.title} →`,
       }

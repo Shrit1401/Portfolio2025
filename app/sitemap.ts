@@ -30,7 +30,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.8,
     },
     {
-      url: `${baseUrl}/nerd`,
+      url: `${baseUrl}/thoughts`,
       lastModified: new Date(),
       changeFrequency: "weekly",
       priority: 0.8,
@@ -56,7 +56,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       let basePath = "";
       switch (item._type) {
         case "research":
-          basePath = "nerd";
+          basePath = "thoughts";
           break;
         case "work":
           basePath = "work";
@@ -79,7 +79,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       if (item._type === "research" && item.tags) {
         item.tags.forEach((tag: string) => {
           routes.push({
-            url: `${baseUrl}/nerd/tag/${tag}`,
+            url: `${baseUrl}/thoughts/tag/${tag}`,
             lastModified: new Date(item._updatedAt),
             changeFrequency: "weekly",
             priority: 0.6,

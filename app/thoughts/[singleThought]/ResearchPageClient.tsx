@@ -33,7 +33,7 @@ function getReadingTime(markdown: string): string {
 export default function ResearchPageClient({
   research,
 }: ResearchPageClientProps) {
-    const readingTime = getReadingTime(research.markdown || "");
+  const readingTime = getReadingTime(research.markdown || "");
   return (
     <div className="relative w-full home">
       <Revealer />
@@ -54,7 +54,7 @@ export default function ResearchPageClient({
               {research.tags.map((tag) => (
                 <Link
                   key={tag.slug.current}
-                  href={`/nerd/tag/${tag.slug.current}`}
+                  href={`/thoughts/tag/${tag.slug.current}`}
                   className="inline-block px-3 py-1 text-sm bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-full transition-colors duration-200"
                 >
                   {tag.name}

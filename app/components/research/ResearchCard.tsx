@@ -73,7 +73,7 @@ export default function ResearchCard({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       onClick={(e) =>
-        handleNavigation(`/nerd/${slug}`)(
+        handleNavigation(`/thoughts/${slug}`)(
           e as unknown as React.MouseEvent<HTMLAnchorElement>
         )
       }
