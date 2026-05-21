@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
-import { client } from "@/sanity/lib/client";
-import { groq } from "next-sanity";
 import { getSiteBaseUrl } from "@/app/lib/site";
+import { getResearchByTag } from "@/app/lib/researchData";
 
 type Params = Promise<{ tag: string }>;
 
@@ -15,12 +14,9 @@ export async function generateMetadata({
   const baseUrl = getSiteBaseUrl();
   const canonical = `${baseUrl}/research/tag/${tagSlug}`;
 
-  const tagDoc = await client.fetch(
-    groq`*[_type == "tag" && slug.current == $slug][0]{ name, "slug": slug.current }`,
-    { slug: tagSlug },
-  );
+  const { tagName } = getResearchByTag(tagSlug);
 
-  if (!tagDoc?.name) {
+  if (!tagName) {
     return {
       title: "Tag",
       description: "Research articles by topic.",
@@ -28,8 +24,8 @@ export async function generateMetadata({
     };
   }
 
-  const title = `Research: ${tagDoc.name}`;
-  const description = `Articles and notes tagged “${tagDoc.name}” — research by Shrit.`;
+  const title = `Research: ${tagName}`;
+  const description = `Articles and notes tagged "${tagName}" — research by Shrit.`;
 
   return {
     title,

@@ -1,38 +1,58 @@
 "use client";
 
-import React, { ReactElement } from "react";
+import React, { useCallback, useState } from "react";
+import { useViewCount } from "@/app/lib/useViewCount";
 import Navbar from "../../components/Navbar";
 import { Revealer } from "../../components/Revealer";
 import ResearchText from "@/app/components/research/ResearchText";
 import Footer from "@/app/components/Footer";
 import ResearchSense from "@/app/components/research/ResearchSense";
 import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
-import remarkMath from "remark-math";
-import rehypeRaw from "rehype-raw";
-import rehypeSlug from "rehype-slug";
-import rehypeHighlight from "rehype-highlight";
-import rehypeKatex from "rehype-katex";
 import "highlight.js/styles/vs2015.css";
 import "katex/dist/katex.min.css";
 import { Research } from "@/app/lib/types";
 import Link from "next/link";
-
-type CalloutType = "note" | "warning" | "tip";
+import HomeschoolingArticle from "./HomeschoolingArticle";
+import ShritGPTArticle from "./ShritGPTArticle";
+import ImageLightbox from "@/app/components/research/ImageLightbox";
+import {
+  remarkPlugins,
+  rehypePlugins,
+  buildMarkdownComponents,
+  proseClasses,
+} from "@/app/components/research/markdownConfig";
 
 interface ResearchPageClientProps {
   research: Research;
 }
+
 function getReadingTime(markdown: string): string {
   const wordsPerMinute = 200;
   const words = markdown.trim().split(/\s+/).length;
   const minutes = Math.ceil(words / wordsPerMinute);
   return `${minutes} min read`;
 }
+
 export default function ResearchPageClient({
   research,
 }: ResearchPageClientProps) {
+  if (research.slug.current === "homeschooling") {
+    return <HomeschoolingArticle research={research} />;
+  }
+  if (research.slug.current === "making-ur-own-gpt") {
+    return <ShritGPTArticle research={research} />;
+  }
+
+  return <GenericArticle research={research} />;
+}
+
+function GenericArticle({ research }: { research: Research }) {
+  const [lightboxSrc, setLightboxSrc] = useState<string | null>(null);
+  const closeLightbox = useCallback(() => setLightboxSrc(null), []);
+  const components = buildMarkdownComponents(setLightboxSrc);
   const readingTime = getReadingTime(research.markdown || "");
+  const views = useViewCount(research.slug.current);
+
   return (
     <div className="relative w-full home">
       <Revealer />
@@ -44,7 +64,7 @@ export default function ResearchPageClient({
         date={research.date || new Date().toISOString().split("T")[0]}
       />
       <main className="container mx-auto flex-grow px-4 pb-8">
-        <article className="prose prose-neutral mx-auto max-w-3xl prose-headings:scroll-mt-20 prose-headings:font-semibold prose-p:text-[1.02rem] prose-p:leading-8 prose-li:text-[1.01rem] prose-li:leading-8 prose-hr:border-neutral-200 prose-strong:font-semibold prose-a:no-underline hover:prose-a:underline prose-pre:m-0 prose-pre:bg-transparent prose-pre:p-0 lg:prose-lg">
+        <article className={proseClasses}>
           {research.tags && research.tags.length > 0 && (
             <div className="mb-7 flex flex-wrap gap-2">
               {research.tags.map((tag) => (
@@ -59,128 +79,9 @@ export default function ResearchPageClient({
             </div>
           )}
           <ReactMarkdown
-            remarkPlugins={[remarkGfm, remarkMath]}
-            rehypePlugins={[
-              rehypeRaw,
-              rehypeSlug,
-              rehypeHighlight,
-              rehypeKatex,
-            ]}
-            components={{
-              // Style callouts
-              blockquote: ({ children, ...props }) => {
-                const content = React.Children.toArray(children);
-                const firstChild = content[0] as ReactElement<{
-                  children: string;
-                }>;
-                if (
-                  React.isValidElement(firstChild) &&
-                  typeof firstChild.props.children === "string" &&
-                  firstChild.props.children.includes("[!")
-                ) {
-                  const type = firstChild.props.children.match(
-                    /\[!(.*?)\]/,
-                  )?.[1] as CalloutType;
-                  const message = firstChild.props.children
-                    .replace(/\[!.*?\]/, "")
-                    .trim();
-
-                  const bgColor =
-                    {
-                      note: "bg-blue-50 border-blue-300",
-                      warning: "bg-amber-50 border-amber-300",
-                      tip: "bg-emerald-50 border-emerald-300",
-                    }[type] || "bg-neutral-50 border-neutral-300";
-
-                  return (
-                    <div
-                      className={`my-6 rounded-md border-l-[3px] px-4 py-3 ${bgColor}`}
-                    >
-                      <div className="mb-1 text-sm font-semibold">
-                        {type.charAt(0).toUpperCase() + type.slice(1)}
-                      </div>
-                      <div className="text-sm text-neutral-700">{message}</div>
-                    </div>
-                  );
-                }
-                return (
-                  <blockquote
-                    className="border-l-2 border-neutral-300 pl-4 italic text-neutral-700"
-                    {...props}
-                  >
-                    {children}
-                  </blockquote>
-                );
-              },
-              // Make all links open in new tab
-              a: ({ href, children, ...props }) => (
-                <a
-                  href={href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-neutral-800 underline-offset-2 hover:underline"
-                  {...props}
-                >
-                  {children}
-                </a>
-              ),
-              // Style code blocks
-              code: ({ className, children, ...props }) => {
-                const match = /language-(\w+)/.exec(className || "");
-                return match ? (
-                  <div className="relative">
-                    <div className="absolute right-2 top-2 text-xs text-neutral-500">
-                      {match[1]}
-                    </div>
-                    <pre
-                      className={`${className} bg-transparent m-0 p-0 rounded-lg overflow-x-auto`}
-                    >
-                      <code className="bg-transparent m-0 p-0" {...props}>
-                        {children}
-                      </code>
-                    </pre>
-                  </div>
-                ) : (
-                  <code className="rounded bg-neutral-100 px-1 py-0.5 text-[0.9em]" {...props}>
-                    {children}
-                  </code>
-                );
-              },
-              // Style task lists
-              input: ({ type, checked, ...props }) => {
-                if (type === "checkbox") {
-                  return (
-                    <input
-                      type="checkbox"
-                      checked={checked}
-                      readOnly
-                      className="mr-2 h-4 w-4"
-                      {...props}
-                    />
-                  );
-                }
-                return <input type={type} {...props} />;
-              },
-              // Style footnotes
-              sup: ({ children, ...props }) => {
-                if (typeof children === "string") {
-                  const id = children.match(/\[(.*?)\]/)?.[1];
-                  if (id) {
-                    return (
-                      <sup className="text-sm text-neutral-600">
-                        <a
-                          href={`#footnote-${id}`}
-                          className="no-underline hover:underline"
-                        >
-                          [{id}]
-                        </a>
-                      </sup>
-                    );
-                  }
-                }
-                return <sup {...props}>{children}</sup>;
-              },
-            }}
+            remarkPlugins={remarkPlugins}
+            rehypePlugins={rehypePlugins}
+            components={components as any}
           >
             {research.markdown || ""}
           </ReactMarkdown>
@@ -188,8 +89,8 @@ export default function ResearchPageClient({
       </main>
 
       <ResearchSense />
-
       <Footer />
+      <ImageLightbox src={lightboxSrc} onClose={closeLightbox} />
     </div>
   );
 }

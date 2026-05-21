@@ -4,10 +4,12 @@ const ResearchText = ({
   title,
   time,
   date,
+  views,
 }: {
   title: string;
   time: string;
   date: string;
+  views?: number | null;
 }) => {
   const formattedDate = new Date(date).toLocaleDateString("en-US", {
     day: "numeric",
@@ -28,6 +30,9 @@ const ResearchText = ({
         style={{ fontFamily: "'Playfair Display', Georgia, serif", fontStyle: "italic" }}
       >
         {formattedDate} &nbsp;·&nbsp; {time}
+        {views != null && (
+          <>&nbsp;·&nbsp; {views.toLocaleString()} views</>
+        )}
       </p>
       <hr className="mt-6 border-t border-neutral-200/90" />
     </div>

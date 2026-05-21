@@ -1,6 +1,5 @@
 import { Metadata } from "next";
-import { getResearchFromSlug } from "@/app/lib/server";
-import type { Research } from "@/app/lib/types";
+import { getResearchBySlug } from "@/app/lib/researchData";
 import ResearchPageClient from "./ResearchPageClient";
 import { getSiteBaseUrl } from "@/app/lib/site";
 
@@ -12,10 +11,10 @@ export async function generateMetadata({
   params: Params;
 }): Promise<Metadata> {
   const { singleThought } = await params;
-  const research = await getResearchFromSlug(singleThought);
+  const data = getResearchBySlug(singleThought);
   const baseUrl = getSiteBaseUrl();
 
-  if (!research || research.length === 0) {
+  if (!data) {
     return {
       title: "Research Not Found",
       description: "The requested research article could not be found.",
@@ -23,12 +22,7 @@ export async function generateMetadata({
     };
   }
 
-  const data = research[0] as Research;
   const canonical = `${baseUrl}/research/${singleThought}`;
-  const updatedAt =
-    "_updatedAt" in data && typeof (data as any)._updatedAt === "string"
-      ? (data as any)._updatedAt
-      : undefined;
 
   return {
     title: data.title,
@@ -40,7 +34,6 @@ export async function generateMetadata({
       url: canonical,
       type: "article",
       publishedTime: data.date,
-      modifiedTime: updatedAt,
     },
     twitter: {
       card: "summary",
@@ -54,9 +47,9 @@ export async function generateMetadata({
 
 export default async function ResearchPage({ params }: { params: Params }) {
   const { singleThought } = await params;
-  const research = await getResearchFromSlug(singleThought);
+  const data = getResearchBySlug(singleThought);
 
-  if (!research || research.length === 0) {
+  if (!data) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-gray-500 text-xl">Research not found</div>
@@ -64,13 +57,8 @@ export default async function ResearchPage({ params }: { params: Params }) {
     );
   }
 
-  const data = research[0] as Research;
   const baseUrl = getSiteBaseUrl();
   const canonical = `${baseUrl}/research/${singleThought}`;
-  const updatedAt =
-    "_updatedAt" in data && typeof (data as any)._updatedAt === "string"
-      ? (data as any)._updatedAt
-      : data.date;
 
   const articleJsonLd = {
     "@context": "https://schema.org",
@@ -78,7 +66,7 @@ export default async function ResearchPage({ params }: { params: Params }) {
     headline: data.title,
     description: data.description,
     datePublished: data.date,
-    dateModified: updatedAt,
+    dateModified: data.date,
     author: {
       "@type": "Person",
       name: "Shrit",

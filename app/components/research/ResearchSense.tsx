@@ -1,39 +1,22 @@
-import React, { useEffect, useState } from "react";
+"use client";
+
+import React from "react";
 import { useTransitionRouter } from "next-transition-router";
 import { usePathname } from "next/navigation";
-import { getAdjacentResearch } from "@/app/lib/server";
-
-interface AdjacentItem {
-  slug: string;
-  title: string;
-}
-
-interface AdjacentResearch {
-  previous: AdjacentItem | null;
-  next: AdjacentItem | null;
-}
+import { getAdjacentResearchBySlug } from "@/app/lib/researchData";
 
 const ResearchSense = () => {
   const router = useTransitionRouter();
   const pathname = usePathname();
-  const [adjacent, setAdjacent] = useState<AdjacentResearch>({ previous: null, next: null });
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const slug = pathname.split("/").pop();
-    if (slug) {
-      getAdjacentResearch(slug).then((data) => {
-        setAdjacent(data);
-        setLoading(false);
-      });
-    }
-  }, [pathname]);
+  const slug = pathname.split("/").pop() || "";
+  const adjacent = getAdjacentResearchBySlug(slug);
 
-  if (loading || (!adjacent.previous && !adjacent.next)) return null;
+  if (!adjacent.previous && !adjacent.next) return null;
 
-  const navigate = (slug: string) => (e: React.MouseEvent) => {
+  const navigate = (s: string) => (e: React.MouseEvent) => {
     e.preventDefault();
-    router.push(`/research/${slug}`);
+    router.push(`/research/${s}`);
   };
 
   return (

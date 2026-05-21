@@ -5,10 +5,9 @@ import {
   pastEvent,
   pastTimeline,
 } from "./pastTimeline";
-import { research } from "./research";
-import { tag } from "./tag";
 import { buildLogEntry, buildLogList } from "./buildLog";
 import { ropePolaroidGallery } from "./ropePolaroidGallery";
+import { pageViews } from "./pageViews";
 
 export const schema: { types: SchemaTypeDefinition[] } = {
   types: [
@@ -16,10 +15,9 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     pastChapter,
     pastEvent,
     pastTimeline,
-    research,
-    tag,
     buildLogEntry,
     buildLogList,
     ropePolaroidGallery,
+    pageViews,
   ],
 };
