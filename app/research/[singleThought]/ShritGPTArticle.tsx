@@ -26,6 +26,7 @@ import AttentionHeatmap from "@/app/components/research/gpt/AttentionHeatmap";
 import MultiHeadDiagram from "@/app/components/research/gpt/MultiHeadDiagram";
 import SamplingPlayground from "@/app/components/research/gpt/SamplingPlayground";
 import TrainingLossChart from "@/app/components/research/gpt/TrainingLossChart";
+import TweetEmbed from "@/app/components/research/TweetEmbed";
 
 function getReadingTime(markdown: string): string {
   const words = markdown.trim().split(/\s+/).length;
@@ -116,6 +117,9 @@ export default function ShritGPTArticle({ research }: { research: Research }) {
           )}
 
           <Prose content={sections[0] || ""} />
+
+          <TweetEmbed tweetId="2057509209017815121" className="my-10 flex justify-center" />
+
           <Prose content={sections[1] || ""} />
           <Prose content={encodingSection} />
 
