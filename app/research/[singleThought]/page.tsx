@@ -23,10 +23,14 @@ export async function generateMetadata({
   }
 
   const canonical = `${baseUrl}/research/${singleThought}`;
+  const ogImage = `${baseUrl}/opengraph-image.png`;
+  const keywords = data.tags?.map((t) => t.name) ?? [];
 
   return {
     title: data.title,
     description: data.description,
+    keywords,
+    authors: [{ name: "Shrit", url: baseUrl }],
     alternates: { canonical },
     openGraph: {
       title: data.title,
@@ -34,13 +38,24 @@ export async function generateMetadata({
       url: canonical,
       type: "article",
       publishedTime: data.date,
+      authors: ["Shrit"],
+      tags: keywords,
+      images: [
+        {
+          url: ogImage,
+          width: 1200,
+          height: 630,
+          alt: data.title,
+        },
+      ],
     },
     twitter: {
-      card: "summary",
+      card: "summary_large_image",
       site: "@shrit1401",
       creator: "@shrit1401",
       title: data.title,
       description: data.description,
+      images: [{ url: ogImage, alt: data.title }],
     },
   };
 }
@@ -59,15 +74,26 @@ export default async function ResearchPage({ params }: { params: Params }) {
 
   const baseUrl = getSiteBaseUrl();
   const canonical = `${baseUrl}/research/${singleThought}`;
+  const ogImage = `${baseUrl}/opengraph-image.png`;
+  const keywords = data.tags?.map((t) => t.name) ?? [];
 
   const articleJsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
     headline: data.title,
     description: data.description,
+    keywords: keywords.join(", "),
     datePublished: data.date,
     dateModified: data.date,
+    url: canonical,
+    image: ogImage,
     author: {
+      "@type": "Person",
+      name: "Shrit",
+      url: baseUrl,
+      sameAs: ["https://twitter.com/Shrit1401"],
+    },
+    publisher: {
       "@type": "Person",
       name: "Shrit",
       url: baseUrl,
