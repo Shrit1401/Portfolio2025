@@ -116,9 +116,9 @@ export default function ShritGPTArticle({ research }: { research: Research }) {
             </div>
           )}
 
-          <Prose content={sections[0] || ""} />
-
           <TweetEmbed tweetId="2057509209017815121" className="my-10 flex justify-center" />
+
+          <Prose content={sections[0] || ""} />
 
           <Prose content={sections[1] || ""} />
           <Prose content={encodingSection} />
